@@ -1,14 +1,24 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset='utf-8'>
-    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-    <title>Home</title>
-    <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
-    <script src='main.js'></script>
-</head>
-<body>
-    <h1>Home - Spring Web Template Integration</h1>
-</body>
+  <head th:replace="/fragments/head :: head"></head>
+
+  <body class="sub_page">
+    <div class="hero_area">
+      <div class="bg-box">
+        <img src="images/hero-bg.jpg" alt="" />
+      </div>
+      <head th:replace="/fragments/header :: header"></head>
+    </div>
+
+    <!-- about section -->
+
+    <section class="about_section layout_padding">
+      <div class="container">
+
+      </div>
+    </section>
+
+    <!-- end about section -->
+    <head th:replace="/fragments/footer :: footer"></head>
+  </body>
 </html>
