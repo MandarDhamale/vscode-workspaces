@@ -31,7 +31,7 @@ public class Post {
     private LocalDateTime createdAt;
 
     @ManyToOne
-    @JoinColumn(name = "account_id", referencedColumnName = "id", nullable = true)
+    @JoinColumn(name = "account_id", referencedColumnName = "id", nullable = false)
     private Account account;
 
 }
