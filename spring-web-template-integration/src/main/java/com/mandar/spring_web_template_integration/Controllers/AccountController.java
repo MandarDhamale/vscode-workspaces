@@ -38,9 +38,7 @@ public class AccountController {
 
     @GetMapping("/login")
     public String login(Model model){
-
         return "login";
-
     }
 
 
