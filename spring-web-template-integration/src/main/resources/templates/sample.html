@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html>
-  <head th:replace="/fragments/head :: head"></head>
+  <head th:replace="~{/fragments/head :: head}"></head>
 
   <body class="sub_page">
     <div class="hero_area">
       <div class="bg-box">
         <img src="images/hero-bg.jpg" alt="" />
       </div>
-      <head th:replace="/fragments/header :: header"></head>
+      <head th:replace="~{/fragments/header :: header}"></head>
     </div>
 
     <!-- about section -->
@@ -17,6 +17,6 @@
     </section>
 
     <!-- end about section -->
-    <head th:replace="/fragments/footer :: footer"></head>
+    <head th:replace="~{/fragments/footer :: footer}"></head>
   </body>
 </html>

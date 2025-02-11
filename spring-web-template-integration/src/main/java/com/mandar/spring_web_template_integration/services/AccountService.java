@@ -44,7 +44,7 @@ public class AccountService implements UserDetailsService {
 
         Account account = optionalAccount.get();
         List<GrantedAuthority> grantedAuthority = new ArrayList<>();
-        grantedAuthority.add(new SimpleGrantedAuthority("ROLE_USER"));
+        grantedAuthority.add(new SimpleGrantedAuthority("Allow"));
 
         return new User(account.getEmail(), account.getPassword(), grantedAuthority);
 
