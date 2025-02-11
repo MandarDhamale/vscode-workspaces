@@ -16,57 +16,51 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class WebSecurityConfig {
 
     private static final String[] WHITELIST = {
-        "/",
-        "/login",
-        "/home",
-        "/register",
-        "/db-console/**",
-        "/css/**",
-        "/fonts/**",
-        "/images/**",
-        "/js/**",
-        "/templates/**"
+        "/", "/login", "/home", "/register",
+        "/db-console/**", "/fonts/**", "/images/**", "/js/**", "/templates/**"
     };
 
-
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
-public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-    http
-        .authorizeHttpRequests((authz) -> {
-            for (String pattern : WHITELIST) {
-                authz.requestMatchers(new AntPathRequestMatcher(pattern)).permitAll();
-            }
-            authz
-                .anyRequest().authenticated();
-        })
-        .formLogin(form -> form
-            .loginPage("/login")
-            .permitAll()
-            .defaultSuccessUrl("/home")
-            .failureUrl("/login?error")
-            .usernameParameter("email")  // Specify the username parameter name (e.g., "email")
-            .passwordParameter("password") // Specify the password parameter name (e.g., "password")
-        )
-        .logout(logout -> logout
-            .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-            .logoutSuccessUrl("/login?logout")
-            .permitAll()
-            .invalidateHttpSession(true)
-            .deleteCookies("JSESSIONID")
-        );
+        http
+            .authorizeHttpRequests(authz -> {
+                for (String pattern : WHITELIST) {
+                    authz.requestMatchers(new AntPathRequestMatcher(pattern)).permitAll();
+                }
+                authz.anyRequest().authenticated();
+            })
+            .formLogin(form -> form
+                .loginPage("/login")
+                .permitAll()
+                .defaultSuccessUrl("/home", true)
+                .failureUrl("/login?error")
+                .usernameParameter("email")
+                .passwordParameter("password")
+            )
+            .logout(logout -> logout
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                .logoutSuccessUrl("/login?logout")
+                .permitAll()
+                .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID")
+            )
+            .sessionManagement(session -> session
+                .sessionFixation().migrateSession()  // Prevents session hijacking
+            )
+            .securityContext(securityContext -> securityContext
+                .requireExplicitSave(false) // Ensures authentication state is saved
+            );
 
-    //TODO: Remove these after upgrading the DB from H2 infile DB
-    http.csrf().disable();
-    http.headers().frameOptions().disable();
+        // Uncomment if H2 Console is needed (for development only)
+        // http.csrf().disable();
+        // http.headers().frameOptions().disable();
 
-    return http.build();
-}
-
-
+        return http.build();
+    }
 }

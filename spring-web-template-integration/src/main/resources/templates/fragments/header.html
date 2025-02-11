@@ -2,7 +2,7 @@
 
 <html
   xmlns:th="http://www.thymeleaf.org"
-  xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+  xmlns:sec="http://www.thymeleaf.org/extras/spring-security5"
 >
   <!-- header section strats -->
   <header class="header_section">
@@ -29,12 +29,21 @@
             <li class="nav-item">
               <a class="nav-link" href="/home">Home </a>
             </li>
+            <span sec:authorize="hasRole('ROLE_USER')">
             <li class="nav-item">
               <a class="nav-link" href="/register">Register</a>
             </li>
+            </span>
+            <span sec:authorize="hasRole('ROLE_USER')">
             <li class="nav-item">
               <a class="nav-link" href="/login">Login</a>
             </li>
+          </span>
+          <span sec:authorize="isAuthenticated()">
+            <li class="nav-item">
+              <a class="nav-link" href="/profile">Profile</a>
+            </li>
+          </span>
           </ul>
         </div>
       </nav>

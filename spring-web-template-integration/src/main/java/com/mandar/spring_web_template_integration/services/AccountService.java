@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,8 +13,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.security.core.GrantedAuthority;
-
 
 import com.mandar.spring_web_template_integration.models.Account;
 import com.mandar.spring_web_template_integration.repositories.AccountRepository;
@@ -47,7 +46,7 @@ public class AccountService implements UserDetailsService {
 
         Account account = optionalAccount.get();
         List<GrantedAuthority> grantedAuthority = new ArrayList<>();
-        grantedAuthority.add(new SimpleGrantedAuthority("Allow"));
+        grantedAuthority.add(new SimpleGrantedAuthority("ROLE_USER"));
 
         return new User(account.getEmail(), account.getPassword(), grantedAuthority);
 
