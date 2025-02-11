@@ -34,42 +34,39 @@ public class WebSecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-        http
-            .authorizeHttpRequests((authz) -> {
+    http
+        .authorizeHttpRequests((authz) -> {
+            for (String pattern : WHITELIST) {
+                authz.requestMatchers(new AntPathRequestMatcher(pattern)).permitAll();
+            }
+            authz
+                .anyRequest().authenticated();
+        })
+        .formLogin(form -> form
+            .loginPage("/login")
+            .permitAll()
+            .defaultSuccessUrl("/home")
+            .failureUrl("/login?error")
+            .usernameParameter("email")  // Specify the username parameter name (e.g., "email")
+            .passwordParameter("password") // Specify the password parameter name (e.g., "password")
+        )
+        .logout(logout -> logout
+            .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+            .logoutSuccessUrl("/login?logout")
+            .permitAll()
+            .invalidateHttpSession(true)
+            .deleteCookies("JSESSIONID")
+        );
 
-                for (String pattern : WHITELIST) {
-                    authz.requestMatchers(new AntPathRequestMatcher(pattern)).permitAll();
-                }
+    //TODO: Remove these after upgrading the DB from H2 infile DB
+    http.csrf().disable();
+    http.headers().frameOptions().disable();
 
-                authz
-                    .anyRequest().authenticated();
-            })
-            .formLogin(form -> form
-                .loginPage("/login") // Specify your login page URL
-                .permitAll() // Allow access to the login page for everyone
-                .defaultSuccessUrl("/home") // Redirect to /home after successful login
-                .failureUrl("/login?error") // Redirect to login with error parameter if login fails.
-            )
-            .logout(logout -> logout
-                .logoutRequestMatcher(new AntPathRequestMatcher("/logout")) // URL to trigger logout
-                .logoutSuccessUrl("/login?logout") // Redirect to /login after logout.  Include a logout parameter if you want.
-                .permitAll() // Allow everyone to access the logout URL
-                .invalidateHttpSession(true) // Invalidate the HTTP session
-                .deleteCookies("JSESSIONID") // Optionally delete the session cookie
-            );
-
-        //TODO: Remove these after upgrading the DB from H2 infile DB
-        http.csrf().disable();
-        http.headers().frameOptions().disable();
-
-
-        return http.build();
-
-    }
+    return http.build();
+}
 
 
 }

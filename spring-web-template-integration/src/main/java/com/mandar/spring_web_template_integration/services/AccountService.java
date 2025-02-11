@@ -1,14 +1,25 @@
 package com.mandar.spring_web_template_integration.services;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.security.core.GrantedAuthority;
+
 
 import com.mandar.spring_web_template_integration.models.Account;
 import com.mandar.spring_web_template_integration.repositories.AccountRepository;
 
 @Service
-public class AccountService {
+public class AccountService implements UserDetailsService {
     
     @Autowired
     private AccountRepository accountRepository;
@@ -22,6 +33,26 @@ public class AccountService {
         return accountRepository.save(account);
     }
 
+
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+
+        Optional<Account> optionalAccount = accountRepository.findOneByEmailIgnoreCase(email);
+
+        if(!optionalAccount.isPresent()){
+        
+            throw new UsernameNotFoundException(email);
+
+        }
+
+        Account account = optionalAccount.get();
+        List<GrantedAuthority> grantedAuthority = new ArrayList<>();
+        grantedAuthority.add(new SimpleGrantedAuthority("Allow"));
+
+        return new User(account.getEmail(), account.getPassword(), grantedAuthority);
+
+        
+    }
 
 
 
