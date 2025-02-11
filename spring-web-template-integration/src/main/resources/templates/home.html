@@ -1,6 +1,8 @@
 <!DOCTYPE html>
-<html   xmlns:th="http://www.thymeleaf.org"
-xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
   <head th:replace="~{/fragments/head :: head}"></head>
 
   <body class="sub_page">
@@ -13,18 +15,17 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
     <!-- about section -->
 
-    <section sec:authorize="isAuthenticated()" class="about_section layout_padding">
+    <section
+      sec:authorize="isAuthenticated()"
+      class="about_section layout_padding"
+    >
       <div class="container">
-
         <div class="posts" th:each="post : ${_posts}">
-
           <h3 th:text="${post.title}">Title</h3>
           <p th:text="${post.body}"></p>
 
-          <hr>
-
+          <hr />
         </div>
-
       </div>
     </section>
 

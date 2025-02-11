@@ -17,14 +17,14 @@ public class HomeController {
 
     @Autowired
     PostService postService;
-    
+
     @GetMapping("/")
-    public String defaultMapping(){
+    public String defaultMapping() {
         return "home";
     }
 
     @GetMapping("/home")
-    public String home(Model model){
+    public String home(Model model) {
 
         List<Post> posts = postService.getAll();
 
@@ -32,18 +32,16 @@ public class HomeController {
 
         return "home";
 
-
     }
 
     @GetMapping("/about")
-    public String about(){
+    public String about() {
         return "about";
     }
 
     @GetMapping("/book")
-    public String book(){
+    public String book() {
         return "book";
     }
-
 
 }

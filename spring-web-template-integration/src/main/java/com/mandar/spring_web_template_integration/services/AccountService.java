@@ -19,27 +19,25 @@ import com.mandar.spring_web_template_integration.repositories.AccountRepository
 
 @Service
 public class AccountService implements UserDetailsService {
-    
+
     @Autowired
     private AccountRepository accountRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-
-    public Account save(Account account){
+    public Account save(Account account) {
         account.setPassword(passwordEncoder.encode(account.getPassword()));
         return accountRepository.save(account);
     }
-
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
         Optional<Account> optionalAccount = accountRepository.findOneByEmailIgnoreCase(email);
 
-        if(!optionalAccount.isPresent()){
-        
+        if (!optionalAccount.isPresent()) {
+
             throw new UsernameNotFoundException(email);
 
         }
@@ -50,9 +48,6 @@ public class AccountService implements UserDetailsService {
 
         return new User(account.getEmail(), account.getPassword(), grantedAuthority);
 
-        
     }
-
-
 
 }
