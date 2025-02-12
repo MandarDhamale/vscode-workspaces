@@ -26,15 +26,15 @@ public class SeedData implements CommandLineRunner {
         Account account01 = new Account();
         Account account02 = new Account();
 
-        account01.setEmail("mrd@gmail.com");
-        account01.setPassword("pwd");
+        account01.setEmail("mrd@ivalua.com");
+        account01.setPassword("mrd");
         account01.setFirstname("mandar");
         account01.setLastname("dhamale");
 
-        account02.setEmail("mrd2@gmail.com");
-        account02.setPassword("pwd2");
-        account02.setFirstname("mandar2");
-        account02.setLastname("dhamale2");
+        account02.setEmail("rpy@ivalua.com");
+        account02.setPassword("ryp");
+        account02.setFirstname("rakesh");
+        account02.setLastname("poojary");
 
         accountService.save(account01);
         accountService.save(account02);
@@ -44,13 +44,13 @@ public class SeedData implements CommandLineRunner {
         if (posts.size() == 0) {
 
             Post post01 = new Post();
-            post01.setTitle("Post 01");
-            post01.setBody("Post 01 body ...");
+            post01.setTitle("3M ");
+            post01.setBody("Supplier of adhesive tapes");
             post01.setAccount(account01);
 
             Post post02 = new Post();
-            post02.setTitle("Post 02");
-            post02.setBody("Post 02 body ...");
+            post02.setTitle("Dell");
+            post02.setBody("Supplier of computers and laptops");
             post02.setAccount(account01);
 
             postService.save(post01);
