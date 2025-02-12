@@ -1,53 +1,41 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head th:replace="~{/fragments/head :: head}"></head>
 
-  <body class="sub_page">
-    <div class="hero_area">
-      <div class="bg-box">
-        <img src="images/hero-bg.jpg" alt="" />
-      </div>
-      <head th:replace="/fragments/header :: header"></head>
+  <body>
+
+    <!-- Header should be inside body -->
+    <header th:replace="~{/fragments/header :: header}"></header>
+
+    <div class="login-container">
+      <form class="login-form" th:action="@{/login}" method="post">
+          <h2><strong>User Login</strong></h2>
+
+          <div class="form-group">
+              <label for="email">Email</label>
+              <div class="input-container">
+                  <input type="email" id="email" name="email" placeholder="Enter your email" class="form-control" required>
+                  <i class="fas fa-user"></i>
+              </div>
+          </div>
+
+          <div class="form-group">
+              <label for="password">Password</label>
+              <div class="input-container">
+                  <input type="password" id="password" name="password" placeholder="Enter your password" class="form-control" required>
+                  <i class="fas fa-lock"></i>
+              </div>
+          </div>
+
+          <!-- CSRF Protection -->
+          <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+          <button type="submit" class="login-btn">Sign In</button>
+      </form>
     </div>
 
-    <!-- about section -->
+    <!-- Footer should be inside body -->
+    <footer th:replace="~{/fragments/footer :: footer}"></footer>
 
-    <section class="book_section layout_padding">
-      <div class="container">
-        <div class="heading_container">
-          <h2>
-            Login
-          </h2>
-        </div>
-        <div class="row">
-          <div class="col-md-6">
-            <div class="form_container">
-              <form action="#" th:action="@{/login}" method="post">
-                <div>
-                  <input id="email" name="email" type="email"  class="form-control" placeholder="email" />
-                </div>
-                <div>
-                  <input id="password" name="password" type="password" class="form-control" placeholder="password" />
-                </div>
-                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                <div class="btn_box">
-                  <button type="submit">
-                    Login
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-          <!-- <div class="col-md-6">
-            <div class="map_container ">
-              <div id="googleMap"></div>
-            </div>
-          </div> -->
-        <!-- </div> -->
-      </div>
-    </section>
-
-    <!-- end about section -->
-    <head th:replace="~{/fragments/footer :: footer}"></head>
   </body>
 </html>

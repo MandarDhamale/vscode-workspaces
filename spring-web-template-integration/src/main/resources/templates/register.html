@@ -1,58 +1,52 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head th:replace="~{/fragments/head :: head}"></head>
 
-  <body class="sub_page">
-    <div class="hero_area">
-      <div class="bg-box">
-        <img src="images/hero-bg.jpg" alt="" />
-      </div>
-      <head th:replace="~{/fragments/header :: header}"></head>
-    </div>
+  <body>
+    <header th:replace="~{/fragments/header :: header}"></header>
 
-    <!-- about section -->
+    <div class="container d-flex justify-content-center align-items-center vh-100">
+      <div class="login-container">
+        <form class="login-form" th:action="@{/register}" th:object="${account}" method="post">
+          <h2>Register</h2>
 
-    <section class="book_section layout_padding">
-      <div class="container">
-        <div class="heading_container">
-          <h2>
-            Register
-          </h2>
-        </div>
-        <div class="row">
-          <div class="col-md-6">
-            <div class="form_container">
-              <form action="#" th:action="@{/register}" th:object="${account}" method="post">
-                <div>
-                  <input id="email" type="email" th:field="*{email}" class="form-control" placeholder="email" />
-                </div>
-                <div>
-                  <input id="password" type="password" th:field="*{password}" class="form-control" placeholder="password" />
-                </div>
-                <div>
-                  <input id="firstname" type="text" th:field="*{firstname}" class="form-control" placeholder="firstname" />
-                </div>
-                <div>
-                  <input id="lastname" type="text" th:field="*{lastname}" class="form-control" placeholder="lastname" />
-                </div>
-                <div class="btn_box">
-                  <button type="submit">
-                    Register
-                  </button>
-                </div>
-              </form>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <div class="input-container">
+              <input id="email" type="email" th:field="*{email}" class="form-control" placeholder="Enter your email" required>
+              <i class="fas fa-envelope"></i>
             </div>
           </div>
-          <!-- <div class="col-md-6">
-            <div class="map_container ">
-              <div id="googleMap"></div>
-            </div>
-          </div> -->
-        <!-- </div> -->
-      </div>
-    </section>
 
-    <!-- end about section -->
-    <head th:replace="~{/fragments/footer :: footer}"></head>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <div class="input-container">
+              <input id="password" type="password" th:field="*{password}" class="form-control" placeholder="Enter your password" required>
+              <i class="fas fa-lock"></i>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="firstname">First Name</label>
+            <div class="input-container">
+              <input id="firstname" type="text" th:field="*{firstname}" class="form-control" placeholder="Enter your first name" required>
+              <i class="fas fa-user"></i>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="lastname">Last Name</label>
+            <div class="input-container">
+              <input id="lastname" type="text" th:field="*{lastname}" class="form-control" placeholder="Enter your last name" required>
+              <i class="fas fa-user"></i>
+            </div>
+          </div>
+
+          <button type="submit" class="login-btn">Register</button>
+        </form>
+      </div>
+    </div>
+
+    <footer th:replace="~{/fragments/footer :: footer}"></footer>
   </body>
 </html>

@@ -25,40 +25,52 @@ public class WebSecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+
+
+
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-        http
-                .authorizeHttpRequests(authz -> {
-                    for (String pattern : WHITELIST) {
-                        authz.requestMatchers(new AntPathRequestMatcher(pattern)).permitAll();
-                    }
-                    authz.anyRequest().authenticated();
-                })
-                .formLogin(form -> form
-                        .loginPage("/login")
-                        .permitAll()
-                        .defaultSuccessUrl("/home", true)
-                        .failureUrl("/login?error")
-                        .usernameParameter("email")
-                        .passwordParameter("password"))
-                .logout(logout -> logout
-                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                        .logoutSuccessUrl("/login?logout")
-                        .permitAll()
-                        .invalidateHttpSession(true)
-                        .deleteCookies("JSESSIONID"))
-                .sessionManagement(session -> session
-                        .sessionFixation().migrateSession() // Prevents session hijacking
-                )
-                .securityContext(securityContext -> securityContext
-                        .requireExplicitSave(false) // Ensures authentication state is saved
-                );
+    http
+            .authorizeHttpRequests(authz -> {
+                // Explicitly allow H2 Console
+                authz.requestMatchers(new AntPathRequestMatcher("/db-console/**")).permitAll();
 
-        // Uncomment if H2 Console is needed (for development only)
-        // http.csrf().disable();
-        // http.headers().frameOptions().disable();
+                // Allow other whitelisted paths
+                for (String pattern : WHITELIST) {
+                    authz.requestMatchers(new AntPathRequestMatcher(pattern)).permitAll();
+                }
 
-        return http.build();
-    }
+                authz.anyRequest().authenticated();
+            })
+            .formLogin(form -> form
+                    .loginPage("/login")
+                    .permitAll()
+                    .defaultSuccessUrl("/home", true)
+                    .failureUrl("/login?error")
+                    .usernameParameter("email")
+                    .passwordParameter("password"))
+            .logout(logout -> logout
+                    .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                    .logoutSuccessUrl("/login?logout")
+                    .permitAll()
+                    .invalidateHttpSession(true)
+                    .deleteCookies("JSESSIONID"))
+            .sessionManagement(session -> session
+                    .sessionFixation().migrateSession()
+            )
+            .securityContext(securityContext -> securityContext
+                    .requireExplicitSave(false)
+            )
+            // Disable CSRF **only for H2 Console**
+            .csrf(csrf -> csrf.ignoringRequestMatchers(new AntPathRequestMatcher("/db-console/**")))
+
+            // Allow H2 Console to be displayed in an iframe
+           //  .headers(headers -> headers.frameOptions().sameOrigin());
+        .headers(headers -> headers.disable());
+
+    return http.build();
+}
+
+    
 }

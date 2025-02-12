@@ -1,35 +1,27 @@
 <!DOCTYPE html>
-<html
-  xmlns:th="http://www.thymeleaf.org"
-  xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
->
+<html lang="en" xmlns:th="http://www.thymeleaf.org" 
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
   <head th:replace="~{/fragments/head :: head}"></head>
 
-  <body class="sub_page">
-    <div class="hero_area">
-      <div class="bg-box">
-        <img src="images/hero-bg.jpg" alt="" />
-      </div>
-      <head th:replace="~{/fragments/header :: header}"></head>
+  <body>
+    <header th:replace="~{/fragments/header :: header}"></header>
+
+    <div class="container mt-5">
+      <h2 class="text-center">Welcome to iProcure</h2>
+
+      <section sec:authorize="isAuthenticated()" class="mt-4">
+        <div class="container">
+          <div class="posts" th:each="post : ${_posts}">
+            <div class="post-card">
+              <h3 th:text="${post.title}">Title</h3>
+              <p th:text="${post.body}"></p>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
 
-    <!-- about section -->
-
-    <section
-      sec:authorize="isAuthenticated()"
-      class="about_section layout_padding"
-    >
-      <div class="container">
-        <div class="posts" th:each="post : ${_posts}">
-          <h3 th:text="${post.title}">Title</h3>
-          <p th:text="${post.body}"></p>
-
-          <hr />
-        </div>
-      </div>
-    </section>
-
-    <!-- end about section -->
-    <head th:replace="~{/fragments/footer :: footer}"></head>
+    <footer th:replace="~{/fragments/footer :: footer}"></footer>
   </body>
 </html>
