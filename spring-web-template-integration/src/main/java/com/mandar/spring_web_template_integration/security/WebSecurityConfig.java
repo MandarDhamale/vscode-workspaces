@@ -1,4 +1,4 @@
-package com.mandar.spring_web_template_integration.config;
+package com.mandar.spring_web_template_integration.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

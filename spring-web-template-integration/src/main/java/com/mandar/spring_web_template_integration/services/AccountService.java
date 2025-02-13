@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import com.mandar.spring_web_template_integration.models.Account;
 import com.mandar.spring_web_template_integration.repositories.AccountRepository;
+import com.mandar.spring_web_template_integration.util.constants.Roles;
 
 @Service
 public class AccountService implements UserDetailsService {
@@ -28,6 +29,7 @@ public class AccountService implements UserDetailsService {
 
     public Account save(Account account) {
         account.setPassword(passwordEncoder.encode(account.getPassword()));
+        account.setRole(Roles.USER.getRole());
         return accountRepository.save(account);
     }
 
@@ -44,7 +46,7 @@ public class AccountService implements UserDetailsService {
 
         Account account = optionalAccount.get();
         List<GrantedAuthority> grantedAuthority = new ArrayList<>();
-        grantedAuthority.add(new SimpleGrantedAuthority("Allow"));
+        grantedAuthority.add(new SimpleGrantedAuthority(account.getRole()));
 
         return new User(account.getEmail(), account.getPassword(), grantedAuthority);
 

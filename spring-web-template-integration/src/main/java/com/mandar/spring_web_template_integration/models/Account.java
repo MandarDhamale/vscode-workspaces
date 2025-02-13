@@ -29,6 +29,8 @@ public class Account {
 
     private String lastname;
 
+    private String role;
+
     // one to many relationship with table Posts -> one account can have one or multiple posts
     @OneToMany(mappedBy = "account")
     private List<Post> posts;
