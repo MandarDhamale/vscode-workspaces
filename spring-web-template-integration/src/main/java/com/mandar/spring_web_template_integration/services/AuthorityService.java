@@ -12,10 +12,8 @@ public class AuthorityService {
     @Autowired
     AuthorityRepository authorityRepository;
 
-    public Authority save(Authority authority){
-        return authorityRepositorys.save(authority);
+    public Authority save(Authority authority){ 
+        return authorityRepository.save(authority);
     }
-
-
-
+    
 }

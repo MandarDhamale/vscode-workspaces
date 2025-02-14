@@ -11,6 +11,9 @@
       <h2 class="text-center">Welcome to iProcure</h2>
       <p>Supplier and Contract modules are under development please comeback soon...</p>
 
+
+      <p sec:authorize="hasRole('ROLE_ADMIN')">Only users with admin role will be able to see this</p>
+
       <section sec:authorize="isAuthenticated()" class="mt-4">
         <div class="container">
           <div class="posts" th:each="post : ${_posts}">
