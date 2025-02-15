@@ -32,14 +32,11 @@ public class HomeController {
 
     }
 
-    @GetMapping("/about")
-    public String about() {
-        return "about";
+    @GetMapping("/editor")
+    public String editor(Model model) {
+        return "editor";
     }
 
-    @GetMapping("/book")
-    public String book() {
-        return "book";
-    }
+
 
 }

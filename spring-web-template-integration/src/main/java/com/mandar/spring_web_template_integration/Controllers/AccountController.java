@@ -40,4 +40,16 @@ public class AccountController {
         return "login";
     }
 
+
+    @GetMapping("/profile")
+    public String profile(Model model) {
+        return "profile";
+    }
+
+
+    @GetMapping("/test")
+    public String test(Model model) {
+        return "test";
+    }
+
 }

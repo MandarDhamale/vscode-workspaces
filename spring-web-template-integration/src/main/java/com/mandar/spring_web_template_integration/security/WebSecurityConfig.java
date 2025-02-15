@@ -10,13 +10,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+import com.mandar.spring_web_template_integration.util.constants.Privilege;
+
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class WebSecurityConfig {
 
     private static final String[] WHITELIST = {
-            "/", "/login", "/home", "/register",
+            "/", "/login", "/register",
             "/db-console/**", "/css/**", "/fonts/**", "/images/**", "/js/**", "/templates/**"
     };
 
@@ -32,6 +34,10 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(authz -> {
                     // Explicitly allow H2 Console
                     authz.requestMatchers(new AntPathRequestMatcher("/db-console/**")).permitAll();
+                    authz.requestMatchers(new AntPathRequestMatcher("/profile/**")).authenticated();
+                //     authz.requestMatchers(new AntPathRequestMatcher("/admin/**")).hasRole("ADMIN");
+                    authz.requestMatchers(new AntPathRequestMatcher("/editor/**")).hasAnyRole("ADMIN", "EDITOR");
+                    authz.requestMatchers(new AntPathRequestMatcher("/admin/**")).hasAuthority(Privilege.ACCESS_ADMIN_PANEL.getPrivilegeString());
 
                     // Allow other whitelisted paths
                     for (String pattern : WHITELIST) {

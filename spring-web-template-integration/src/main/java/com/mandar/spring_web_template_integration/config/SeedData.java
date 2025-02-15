@@ -41,36 +41,49 @@ public class SeedData implements CommandLineRunner {
             authorityService.save(authority);
         }
 
-        Set<Authority> authorities = new HashSet<>();
-        authorityService.findById(Privilege.ACCESS_ADMIN_PANEL.getId()).ifPresent(authorities::add);
-        authorityService.findById(Privilege.RESET_ANY_USER_PASSWORD.getId()).ifPresent(authorities::add);
+        Set<Authority> all_authorities = new HashSet<>();
+        authorityService.findById(Privilege.ACCESS_ADMIN_PANEL.getId()).ifPresent(all_authorities::add);
+        authorityService.findById(Privilege.RESET_ANY_USER_PASSWORD.getId()).ifPresent(all_authorities::add);
+
+        Set<Authority> adminPanelAuthority = new HashSet<>();
+        authorityService.findById(Privilege.ACCESS_ADMIN_PANEL.getId()).ifPresent(adminPanelAuthority:: add);
 
         Account account01 = new Account();
         Account account02 = new Account();
         Account account03 = new Account();
+        Account account04 = new Account();
+
+
 
         account01.setEmail("admin@iprocure.com");
-        account01.setPassword("admin");
+        account01.setPassword("pass787");
         account01.setFirstname("admin");
         account01.setLastname("admin");
         account01.setRole(Roles.ADMIN.getRole());
-        account01.setAuthorities(authorities);
+        account01.setAuthorities(adminPanelAuthority);
 
         account02.setEmail("editor@iprocure.com");
-        account02.setPassword("editor");
+        account02.setPassword("pass787");
         account02.setFirstname("editor");
         account02.setLastname("editor");
         account02.setRole(Roles.EDITOR.getRole());
-        account02.setAuthorities(authorities);
 
         account03.setEmail("user@iprocure.com");
-        account03.setPassword("user");
+        account03.setPassword("pass787");
         account03.setFirstname("user");
         account03.setLastname("user");
+
+        account04.setEmail("super_editor@iprocure.com");
+        account04.setPassword("pass787");
+        account04.setFirstname("super_editor");
+        account04.setLastname("super_editor");
+        account04.setRole(Roles.EDITOR.getRole());
+        account04.setAuthorities(all_authorities);
 
         accountService.save(account01);
         accountService.save(account02);
         accountService.save(account03);
+        accountService.save(account04);
 
         List<Post> posts = postService.getAll();
 
