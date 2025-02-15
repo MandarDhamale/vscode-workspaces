@@ -12,13 +12,12 @@ import com.mandar.spring_web_template_integration.services.AccountService;
 
 @Controller
 public class AccountController {
-    
+
     @Autowired
     AccountService accountService;
 
-
     @GetMapping("/register")
-    public String register(Model model){
+    public String register(Model model) {
 
         Account account = new Account();
 
@@ -29,7 +28,7 @@ public class AccountController {
     }
 
     @PostMapping("/register")
-    public String registerUser(@ModelAttribute Account account){
+    public String registerUser(@ModelAttribute Account account) {
 
         accountService.save(account);
         return "redirect:/";
@@ -37,9 +36,8 @@ public class AccountController {
     }
 
     @GetMapping("/login")
-    public String login(Model model){
+    public String login(Model model) {
         return "login";
     }
-
 
 }

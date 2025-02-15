@@ -13,7 +13,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class Authority {
-    
+
     @Id
     private Long id;
 
@@ -21,6 +21,5 @@ public class Authority {
 
     @ManyToMany(mappedBy = "authorities")
     private Set<Account> accounts;
-
 
 }

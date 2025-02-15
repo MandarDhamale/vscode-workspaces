@@ -42,7 +42,7 @@ public class Account {
 
     // relation between account and authority tables
     @ManyToMany
-    @JoinTable(name = "ACCOUNT_AUTHORITY", joinColumns = @JoinColumn(name = "ACCOUNT_ID", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "AUTHORITY_CODE", referencedColumnName = "name"))
+    @JoinTable(name = "ACCOUNT_AUTHORITY", joinColumns = @JoinColumn(name = "ACCOUNT_ID", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "AUTHORITY_ID", referencedColumnName = "id"))
     private Set<Authority> authorities;
 
 }

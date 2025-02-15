@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.mandar.spring_web_template_integration.models.Account;
+import com.mandar.spring_web_template_integration.models.Authority;
 import com.mandar.spring_web_template_integration.repositories.AccountRepository;
 import com.mandar.spring_web_template_integration.util.constants.Roles;
 
@@ -29,7 +30,7 @@ public class AccountService implements UserDetailsService {
 
     public Account save(Account account) {
         account.setPassword(passwordEncoder.encode(account.getPassword()));
-        if(account.getRole().equals(null)){
+        if (account.getRole() == null) {
             account.setRole(Roles.USER.getRole());
         }
         return accountRepository.save(account);
@@ -46,9 +47,19 @@ public class AccountService implements UserDetailsService {
 
         }
 
+
         Account account = optionalAccount.get();
         List<GrantedAuthority> grantedAuthority = new ArrayList<>();
         grantedAuthority.add(new SimpleGrantedAuthority(account.getRole()));
+        System.out.println("account role: " + account.getRole());
+
+
+        for(Authority _auth: account.getAuthorities()){
+            grantedAuthority.add(new SimpleGrantedAuthority(_auth.getName()));
+            System.out.println("auth name: " + _auth.getName());
+        }
+
+
 
         return new User(account.getEmail(), account.getPassword(), grantedAuthority);
 

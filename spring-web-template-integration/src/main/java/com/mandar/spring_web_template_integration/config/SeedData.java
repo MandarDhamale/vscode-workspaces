@@ -29,53 +29,48 @@ public class SeedData implements CommandLineRunner {
     @Autowired
     private AuthorityService authorityService;
 
-
-
     @Override
     public void run(String... args) throws Exception {
 
+        // takes the values from enum Privileges and puts them into Authority model
+        // which is then stored in db
+        for (Privilege privilege : Privilege.values()) {
+            Authority authority = new Authority();
+            authority.setId(privilege.getId());
+            authority.setName(privilege.getPrivilegeString());
+            authorityService.save(authority);
+        }
 
-
-    for(Privilege privilege: Privilege.values()){
-        Authority authority = new Authority();
-        authority.setId(privilege.getId());
-        authority.setName(privilege.getPrivilegeString());
-        authorityService.save(authority);
-    }
-
+        Set<Authority> authorities = new HashSet<>();
+        authorityService.findById(Privilege.ACCESS_ADMIN_PANEL.getId()).ifPresent(authorities::add);
+        authorityService.findById(Privilege.RESET_ANY_USER_PASSWORD.getId()).ifPresent(authorities::add);
 
         Account account01 = new Account();
         Account account02 = new Account();
         Account account03 = new Account();
 
-        Authority adminPannelPrivilege = new Authority();
-        adminPannelPrivilege.setId(1l);
-        adminPannelPrivilege.setName(Privilege.RESET_ANY_USER_PASSWORD.getPrivilegeString());
-
-        Set<Authority> authorities = new HashSet<>();
-        authorities.add(adminPannelPrivilege);
-
-
-        account01.setEmail("m@ip.com");
-        account01.setPassword("mrd");
-        account01.setFirstname("mandar");
-        account01.setLastname("dhamale");
+        account01.setEmail("admin@iprocure.com");
+        account01.setPassword("admin");
+        account01.setFirstname("admin");
+        account01.setLastname("admin");
         account01.setRole(Roles.ADMIN.getRole());
         account01.setAuthorities(authorities);
 
-        account02.setEmail("root@ip.com");
-        account02.setPassword("root");
-        account02.setFirstname("root");
-        account02.setLastname("root");
+        account02.setEmail("editor@iprocure.com");
+        account02.setPassword("editor");
+        account02.setFirstname("editor");
+        account02.setLastname("editor");
         account02.setRole(Roles.EDITOR.getRole());
+        account02.setAuthorities(authorities);
 
-        account03.setEmail("user@ip.com");
+        account03.setEmail("user@iprocure.com");
         account03.setPassword("user");
         account03.setFirstname("user");
         account03.setLastname("user");
 
         accountService.save(account01);
         accountService.save(account02);
+        accountService.save(account03);
 
         List<Post> posts = postService.getAll();
 
