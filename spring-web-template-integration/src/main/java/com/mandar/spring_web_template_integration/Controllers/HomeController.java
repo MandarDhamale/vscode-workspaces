@@ -18,7 +18,7 @@ public class HomeController {
 
     @GetMapping("/")
     public String defaultMapping() {
-        return "home";
+        return "home_views/home";
     }
 
     @GetMapping("/home")
@@ -28,13 +28,8 @@ public class HomeController {
 
         model.addAttribute("_posts", posts);
 
-        return "home";
+        return "home_views/home";
 
-    }
-
-    @GetMapping("/editor")
-    public String editor(Model model) {
-        return "editor";
     }
 
 

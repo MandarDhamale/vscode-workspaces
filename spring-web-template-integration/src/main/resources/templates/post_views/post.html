@@ -8,12 +8,22 @@
     <header th:replace="~{/fragments/header :: header}"></header>
 
     <div class="container mt-5">
-      <h2 class="text-center">Test page</h2>
+      <h2 class="text-center">Welcome to iProcure</h2>
       <p>Supplier and Contract modules are under development please comeback soon...</p>
-
+      <h3>Post data page</h3>
 
       <p sec:authorize="hasRole('ROLE_ADMIN')">Only users with admin role will be able to see this</p>
 
+      <section sec:authorize="isAuthenticated()" class="mt-4">
+        <div class="container">
+          <div class="posts" th:each="post : ${_posts}">
+            <div class="post-card">
+              <h3 th:text="${post.title}">Title</h3>
+              <p th:text="${post.body}"></p>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
 
     <footer th:replace="~{/fragments/footer :: footer}"></footer>

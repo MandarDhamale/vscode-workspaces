@@ -10,7 +10,7 @@
     <div class="container mt-5">
       <h2 class="text-center">Welcome to iProcure</h2>
       <p>Supplier and Contract modules are under development please comeback soon...</p>
-
+      <h3>Admin page</h3>
 
       <p sec:authorize="hasRole('ROLE_ADMIN')">Only users with admin role will be able to see this</p>
 
@@ -18,7 +18,8 @@
         <div class="container">
           <div class="posts" th:each="post : ${_posts}">
             <div class="post-card">
-              <h3 th:text="${post.title}">Title</h3>
+              <h3><a th:href="@{'/posts/' + ${post.id}}" th:text="${post.title}">Title</a></h3>
+              <h5 th:text="${post.account.firstname}"></h5>
               <p th:text="${post.body}"></p>
             </div>
           </div>

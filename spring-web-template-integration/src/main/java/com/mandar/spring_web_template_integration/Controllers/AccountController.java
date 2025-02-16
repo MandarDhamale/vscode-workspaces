@@ -23,7 +23,7 @@ public class AccountController {
 
         model.addAttribute("account", account);
 
-        return "register";
+        return "account_views/register";
 
     }
 
@@ -31,25 +31,19 @@ public class AccountController {
     public String registerUser(@ModelAttribute Account account) {
 
         accountService.save(account);
-        return "redirect:/";
+        return "account_views/register:/";
 
     }
 
     @GetMapping("/login")
     public String login(Model model) {
-        return "login";
+        return "account_views/login";
     }
 
 
     @GetMapping("/profile")
     public String profile(Model model) {
-        return "profile";
-    }
-
-
-    @GetMapping("/test")
-    public String test(Model model) {
-        return "test";
+        return "account_views/profile";
     }
 
 }
