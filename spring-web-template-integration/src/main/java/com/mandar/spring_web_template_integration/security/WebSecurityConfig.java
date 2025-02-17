@@ -35,9 +35,11 @@ public class WebSecurityConfig {
                     // Explicitly allow H2 Console
                     authz.requestMatchers(new AntPathRequestMatcher("/db-console/**")).permitAll();
                     authz.requestMatchers(new AntPathRequestMatcher("/profile/**")).authenticated();
-                //     authz.requestMatchers(new AntPathRequestMatcher("/admin/**")).hasRole("ADMIN");
+                    // authz.requestMatchers(new
+                    // AntPathRequestMatcher("/admin/**")).hasRole("ADMIN");
                     authz.requestMatchers(new AntPathRequestMatcher("/editor/**")).hasAnyRole("ADMIN", "EDITOR");
-                    authz.requestMatchers(new AntPathRequestMatcher("/admin/**")).hasAuthority(Privilege.ACCESS_ADMIN_PANEL.getPrivilegeString());
+                    authz.requestMatchers(new AntPathRequestMatcher("/admin/**"))
+                            .hasAuthority(Privilege.ACCESS_ADMIN_PANEL.getPrivilegeString());
 
                     // Allow other whitelisted paths
                     for (String pattern : WHITELIST) {

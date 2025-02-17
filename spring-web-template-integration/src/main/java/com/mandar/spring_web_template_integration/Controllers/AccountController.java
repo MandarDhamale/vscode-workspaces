@@ -40,7 +40,6 @@ public class AccountController {
         return "account_views/login";
     }
 
-
     @GetMapping("/profile")
     public String profile(Model model) {
         return "account_views/profile";

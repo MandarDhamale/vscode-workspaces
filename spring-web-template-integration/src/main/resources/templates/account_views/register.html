@@ -5,15 +5,29 @@
   <body>
     <header th:replace="~{/fragments/header :: header}"></header>
 
-    <div class="container d-flex justify-content-center align-items-center vh-100">
+    <div
+      class="container d-flex justify-content-center align-items-center vh-100"
+    >
       <div class="login-container">
-        <form class="login-form" th:action="@{/register}" th:object="${account}" method="post">
+        <form
+          class="login-form"
+          th:action="@{/register}"
+          th:object="${account}"
+          method="post"
+        >
           <h2>Register</h2>
 
           <div class="form-group">
             <label for="email">Email</label>
             <div class="input-container">
-              <input id="email" type="email" th:field="*{email}" class="form-control" placeholder="Enter your email" required>
+              <input
+                id="email"
+                type="email"
+                th:field="*{email}"
+                class="form-control"
+                placeholder="Enter your email"
+                required
+              />
               <i class="fas fa-envelope"></i>
             </div>
           </div>
@@ -21,7 +35,14 @@
           <div class="form-group">
             <label for="password">Password</label>
             <div class="input-container">
-              <input id="password" type="password" th:field="*{password}" class="form-control" placeholder="Enter your password" required>
+              <input
+                id="password"
+                type="password"
+                th:field="*{password}"
+                class="form-control"
+                placeholder="Enter your password"
+                required
+              />
               <i class="fas fa-lock"></i>
             </div>
           </div>
@@ -29,7 +50,14 @@
           <div class="form-group">
             <label for="firstname">First Name</label>
             <div class="input-container">
-              <input id="firstname" type="text" th:field="*{firstname}" class="form-control" placeholder="Enter your first name" required>
+              <input
+                id="firstname"
+                type="text"
+                th:field="*{firstname}"
+                class="form-control"
+                placeholder="Enter your first name"
+                required
+              />
               <i class="fas fa-user"></i>
             </div>
           </div>
@@ -37,7 +65,14 @@
           <div class="form-group">
             <label for="lastname">Last Name</label>
             <div class="input-container">
-              <input id="lastname" type="text" th:field="*{lastname}" class="form-control" placeholder="Enter your last name" required>
+              <input
+                id="lastname"
+                type="text"
+                th:field="*{lastname}"
+                class="form-control"
+                placeholder="Enter your last name"
+                required
+              />
               <i class="fas fa-user"></i>
             </div>
           </div>

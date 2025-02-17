@@ -26,12 +26,10 @@ public class HomeController {
 
         List<Post> posts = postService.getAll();
 
-        model.addAttribute("_posts", posts);
+        model.addAttribute("posts", posts);
 
         return "home_views/home";
 
     }
-
-
 
 }

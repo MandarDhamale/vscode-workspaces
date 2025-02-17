@@ -46,14 +46,12 @@ public class SeedData implements CommandLineRunner {
         authorityService.findById(Privilege.RESET_ANY_USER_PASSWORD.getId()).ifPresent(all_authorities::add);
 
         Set<Authority> adminPanelAuthority = new HashSet<>();
-        authorityService.findById(Privilege.ACCESS_ADMIN_PANEL.getId()).ifPresent(adminPanelAuthority:: add);
+        authorityService.findById(Privilege.ACCESS_ADMIN_PANEL.getId()).ifPresent(adminPanelAuthority::add);
 
         Account account01 = new Account();
         Account account02 = new Account();
         Account account03 = new Account();
         Account account04 = new Account();
-
-
 
         account01.setEmail("admin@iprocure.com");
         account01.setPassword("pass787");

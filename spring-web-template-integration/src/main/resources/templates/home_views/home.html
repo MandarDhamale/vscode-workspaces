@@ -1,7 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" 
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-
+<html
+  lang="en"
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
   <head th:replace="~{/fragments/head :: head}"></head>
 
   <body>
@@ -9,20 +11,24 @@
 
     <div class="container mt-5">
       <h2 class="text-center">Welcome to iProcure</h2>
-      <p>Supplier and Contract modules are under development please comeback soon...</p>
-
-
-      <p sec:authorize="hasRole('ROLE_ADMIN')">Only users with admin role will be able to see this</p>
+      <p>
+        Supplier and Contract modules are under development please comeback
+        soon...
+      </p>
 
       <section sec:authorize="isAuthenticated()" class="mt-4">
         <div class="container">
-          <div class="posts" th:each="post : ${_posts}">
+          <div class="posts" th:each="post : ${posts}">
             <div class="post-card">
-              <h3><a th:href="@{'/posts/' + ${post.id}}" th:text="${post.title}">Title</a></h3>
+              <h3>
+                <a th:href="@{'/post/' + ${post.id}}" th:text="${post.title}"
+                  >Title</a
+                >
+              </h3>
               <h5 th:text="'Author: ' + ${post.account.firstname}"></h5>
               <p th:text="${post.body}"></p>
             </div>
-          </div>
+          </div>  
         </div>
       </section>
     </div>
