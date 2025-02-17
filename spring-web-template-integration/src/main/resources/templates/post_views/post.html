@@ -26,12 +26,14 @@
             </div>
           </div>
         </div>
-        <a
+        <div sec:authorize="isAuthenticated()" th:if="${isOwner}"  >
+          <a
           th:href="@{'/edit_post/' + ${post.id}}"
           class="btn btn-dark"
           role="button"
           >Edit</a
         >
+        </div>
       </section>
     </div>
 
