@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html
+  lang="en"
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
+  <head th:replace="~{/fragments/head :: head}"></head>
+
+  <body>
+    <header th:replace="~{/fragments/header :: header}"></header>
+
+    <div class="container mt-5">
+      
+      <section sec:authorize="isAuthenticated()" class="mt-4">
+        <div class="container">
+          <div class="table-responsive">
+            <table class="table table-hover align-middle shadow-sm rounded">
+              <thead class="table-dark">
+                <tr>
+                  <th scope="col">Title</th>
+                  <th scope="col">Author</th>
+                  <th scope="col">Body</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr th:each="post : ${posts}">
+                  <td>
+                    <a th:href="@{'/post/' + ${post.id}}" th:text="${post.title}" class="fw-bold text-decoration-none">Title</a>
+                  </td>
+                  <td th:text="${post.account.firstname}" class="text-muted"></td>
+                  <td th:text="${post.body}"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <footer th:replace="~{/fragments/footer :: footer}"></footer>
+  </body>
+</html>

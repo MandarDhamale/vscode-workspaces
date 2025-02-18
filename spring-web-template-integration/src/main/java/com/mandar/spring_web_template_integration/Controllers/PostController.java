@@ -1,6 +1,7 @@
 package com.mandar.spring_web_template_integration.Controllers;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +10,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import com.mandar.spring_web_template_integration.models.Account;
 import com.mandar.spring_web_template_integration.models.Post;
+import com.mandar.spring_web_template_integration.services.AccountService;
 import com.mandar.spring_web_template_integration.services.PostService;
 
 @Controller
@@ -17,6 +20,9 @@ public class PostController {
 
     @Autowired
     PostService postService;
+
+    @Autowired
+    AccountService accountService;
 
     @GetMapping("/post/{id}")
     public String getPosts(@PathVariable Long id, Model model, Principal principal) {
@@ -46,6 +52,43 @@ public class PostController {
             return "404";
         }
 
+
+
+
     }
 
+
+    @GetMapping("/post_browse")
+    public String postBrowse(Model model) {
+
+        List<Post> posts = postService.getAll();
+
+        model.addAttribute("posts", posts);
+
+        return "post_views/post_browse";
+
+    }
+
+    @GetMapping("/posts/add")
+    public String addPost(Model model, Principal principal){
+
+        String authUser = "email";
+        if(principal != null){
+            authUser = principal.getName();
+        }
+
+        Optional<Account> optionalAccount = accountService.findOneByEmail(authUser);
+        if(optionalAccount.isPresent()){
+            Post post = new Post();
+            post.setAccount(optionalAccount.get());
+            model.addAttribute("post", post);
+
+            return "post_views/post_add";
+
+        }else{
+            return "redirect:/";
+        }
+
+
+    }
 }

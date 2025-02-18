@@ -10,29 +10,42 @@
     <header th:replace="~{/fragments/header :: header}"></header>
 
     <div class="container mt-5">
-      <h2 class="text-center">Welcome to iProcure</h2>
-      <p>
-        Supplier and Contract modules are under development please comeback
-        soon...
-      </p>
-      <h3>Post data page</h3>
+      <h3 class="text-center">Post Data Page</h3>
 
       <section sec:authorize="isAuthenticated()" class="mt-4">
         <div class="container">
-          <div class="posts" th:each="post : ${post}">
-            <div class="post-card">
-              <h3 th:text="${post.title}">Title</h3>
-              <p th:text="${post.body}"></p>
+          <div class="card p-4 shadow">
+            <h3 class="text-center">Post Details</h3>
+
+            <div class="mb-3">
+              <label class="form-label"><b>Title:</b></label>
+              <input
+                type="text"
+                class="form-control"
+                th:value="${post.title}"
+                readonly
+              />
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label"><b>Content:</b></label>
+              <textarea
+                class="form-control"
+                rows="5"
+                readonly
+                th:text="${post.body}"
+              ></textarea>
+            </div>
+
+            <div sec:authorize="isAuthenticated()" th:if="${isOwner}">
+              <a
+                th:href="@{'/edit_post/' + ${post.id}}"
+                class="btn btn-dark"
+                role="button"
+                >Edit Post</a
+              >
             </div>
           </div>
-        </div>
-        <div sec:authorize="isAuthenticated()" th:if="${isOwner}"  >
-          <a
-          th:href="@{'/edit_post/' + ${post.id}}"
-          class="btn btn-dark"
-          role="button"
-          >Edit</a
-        >
         </div>
       </section>
     </div>

@@ -88,17 +88,24 @@ public class SeedData implements CommandLineRunner {
         if (posts.size() == 0) {
 
             Post post01 = new Post();
-            post01.setTitle("3M ");
+            post01.setTitle("3M");
             post01.setBody("Supplier of adhesive tapes");
             post01.setAccount(account01);
 
             Post post02 = new Post();
             post02.setTitle("Dell");
             post02.setBody("Supplier of computers and laptops");
-            post02.setAccount(account01);
+            post02.setAccount(account02);
+
+            Post post03 = new Post();
+            post03.setTitle("Acer Corp.");
+            post03.setBody("Supplier of computers and laptops");
+            post03.setAccount(account03);
+
 
             postService.save(post01);
             postService.save(post02);
+            postService.save(post03);
 
         }
 
