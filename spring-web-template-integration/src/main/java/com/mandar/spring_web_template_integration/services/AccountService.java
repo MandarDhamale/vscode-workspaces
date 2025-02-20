@@ -19,6 +19,8 @@ import com.mandar.spring_web_template_integration.models.Authority;
 import com.mandar.spring_web_template_integration.repositories.AccountRepository;
 import com.mandar.spring_web_template_integration.util.constants.Roles;
 
+
+
 @Service
 public class AccountService implements UserDetailsService {
 
