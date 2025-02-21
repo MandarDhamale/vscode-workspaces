@@ -10,5 +10,4 @@ public class SpringWebTemplateIntegrationApplication {
 		SpringApplication.run(SpringWebTemplateIntegrationApplication.class, args);
 		System.out.println("Application up and running...");
 	}
-
 }

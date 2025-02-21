@@ -1,28 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
   <head th:replace="~{/fragments/head :: head}"></head>
-
-  <footer th:fragment="footer" class="footer text-white text-center py-3">
+  
+  <footer th:fragment="footer" class="footer text-white text-center">
     <div class="container">
-      <p>© 2025 iProcure. All rights reserved.</p>
+      © 2025 iProcure. All rights reserved.
     </div>
   </footer>
-  <script src="https://cdn.ckeditor.com/4.25.1-lts/standard/ckeditor.js"></script>
-
-  <script>
-    const { ClassicEditor, Heading, BlockQuote, Bold, Italic, Link, List } =
-      CKEDITOR;
-
-    ClassicEditor.create(document.querySelector("#editor"), {
-      removePlugins: ["Heading"], // Remove a plugin from the setup.
-      toolbar: [
-        "bold",
-        "italic",
-        "bulletedList",
-        "numberedList",
-        "blockQuote",
-        "link",
-      ],
-    });
-  </script>
 </html>

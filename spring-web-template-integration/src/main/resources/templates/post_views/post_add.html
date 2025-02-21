@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-  <head th:replace="~{/fragments/head :: head}">
-    <link rel="stylesheet" href="path/to/your/styles.css"> <!-- Link to the custom CSS file -->
-  </head>
+  <head th:replace="~{/fragments/head :: head}"> </head>
 
   <body>
     <header th:replace="~{/fragments/header :: header}"></header>
@@ -10,19 +8,43 @@
     <div class="container mt-5">
       <h2 class="text-center">Create a New Post</h2>
 
-      <form action="#" th:action="@{/post/add}" th:object="${post}" method="post" class="mt-4">
-        <input type="hidden" id="account" name="account" th:field="*{account}">
+      <form
+        th:action="@{/post/add}"
+        th:object="${post}"
+        method="post"
+        class="mt-4"
+      >
+        <input
+          type="hidden"
+          id="account"
+          name="account"
+          th:field="*{account}"
+        />
+
         <div class="mb-3">
           <label for="title" class="form-label">Title</label>
-          <input type="text" th:field="*{title}" class="form-control" id="title" name="title" required placeholder="Enter post title">
+          <input
+            type="text"
+            th:field="*{title}"
+            class="form-control"
+            id="title"
+            name="title"
+            required
+            placeholder="Enter post title"
+          />
         </div>
 
         <div class="mb-3">
           <label for="body" class="form-label">Body</label>
-          <textarea class="form-control" th:field="*{body}" id="body"  name="body" rows="5" required placeholder="Enter post content"></textarea>
+          <textarea
+            class="form-control"
+            th:field="*{body}"
+            id="body"
+            name="body"
+            rows="5"
+            required
+          ></textarea>
         </div>
-
-        <input type="textarea" id="editor">
 
         <div class="d-flex justify-content-center">
           <button type="submit" class="btn btn-dark">Create Post</button>
@@ -31,5 +53,18 @@
     </div>
 
     <footer th:replace="~{/fragments/footer :: footer}"></footer>
+
+    <script>
+      function loadCKEditor() {
+        if (typeof CKEDITOR !== "undefined") {
+          CKEDITOR.replace("body");
+        } else {
+          console.warn("CKEditor not loaded, retrying in 500ms...");
+          setTimeout(loadCKEditor, 500);
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", loadCKEditor);
+    </script>
   </body>
 </html>
