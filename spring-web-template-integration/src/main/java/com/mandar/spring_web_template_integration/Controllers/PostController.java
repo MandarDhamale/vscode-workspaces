@@ -5,10 +5,13 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import com.mandar.spring_web_template_integration.models.Account;
 import com.mandar.spring_web_template_integration.models.Post;
@@ -69,7 +72,9 @@ public class PostController {
 
     }
 
+    //rendering the add post page 
     @GetMapping("/posts/add")
+    @PreAuthorize("isAuthenticated()")
     public String addPost(Model model, Principal principal){
 
         String authUser = "email";
@@ -91,4 +96,25 @@ public class PostController {
 
 
     }
+
+
+    @PostMapping("/post/add")
+    @PreAuthorize("isAuthenticated()")
+    public String addNewPost(@ModelAttribute Post post, Principal principal){
+        String authUser = "email";
+        
+        if(principal != null){
+            authUser = principal.getName();
+        }
+
+        if(post.getAccount().getEmail().compareTo(authUser) < 0){
+            return "redirect:/?error";
+        }
+
+        postService.save(post);
+        return "redirect:/post/" + post.getId();
+
+
+    }
+
 }

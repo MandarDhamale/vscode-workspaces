@@ -21,7 +21,7 @@
                 >
               </h3>
               <h5 th:text="'Author: ' + ${post.account.firstname}"></h5>
-              <p th:text="${post.body}"></p>
+              <p th:utext="${post.body}"></p>
             </div>
           </div>  
         </div>

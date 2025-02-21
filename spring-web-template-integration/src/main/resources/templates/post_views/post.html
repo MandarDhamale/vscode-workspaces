@@ -29,13 +29,9 @@
 
             <div class="mb-3">
               <label class="form-label"><b>Content:</b></label>
-              <textarea
-                class="form-control"
-                rows="5"
-                readonly
-                th:text="${post.body}"
-              ></textarea>
+              <div class="form-control" readonly th:utext="${post.body}"></div>
             </div>
+            
 
             <div sec:authorize="isAuthenticated()" th:if="${isOwner}">
               <a

@@ -28,7 +28,7 @@
                     <a th:href="@{'/post/' + ${post.id}}" th:text="${post.title}" class="fw-bold text-decoration-none">Title</a>
                   </td>
                   <td th:text="${post.account.firstname}" class="text-muted"></td>
-                  <td th:text="${post.body}"></td>
+                  <td th:utext="${post.body}"></td>
                 </tr>
               </tbody>
             </table>
