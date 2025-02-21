@@ -9,10 +9,10 @@
         <ul class="navbar-nav me-auto">
           <!-- Post Dropdown -->
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle text-white" href="#" id="postDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <a class="nav-link dropdown-toggle text-white" href="#" id="postDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" sec:authorize="isAuthenticated()">
               Posts
             </a>
-            <ul class="dropdown-menu" aria-labelledby="postDropdown">
+            <ul class="dropdown-menu" aria-labelledby="postDropdown" >
               <li>
                 <a class="dropdown-item" href="/post_browse">Browse Posts</a>
               </li>

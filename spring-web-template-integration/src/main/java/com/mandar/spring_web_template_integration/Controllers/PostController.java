@@ -32,34 +32,28 @@ public class PostController {
 
         Optional<Post> optionalPost = postService.getById(id);
 
-        String authUser = "email"; //dummy name
+        String authUser = "email"; // dummy name
 
         if (optionalPost.isPresent()) {
             Post post = optionalPost.get();
             model.addAttribute("post", post);
 
-            if(principal != null){
+            if (principal != null) {
                 authUser = principal.getName();
             }
 
-            if(authUser.equals(post.getAccount().getEmail())){
+            if (authUser.equals(post.getAccount().getEmail())) {
                 model.addAttribute("isOwner", true);
-            }else{
+            } else {
                 model.addAttribute("isOwner", false);
             }
-
-
 
             return "post_views/post";
         } else {
             return "404";
         }
 
-
-
-
     }
-
 
     @GetMapping("/post_browse")
     public String postBrowse(Model model) {
@@ -72,48 +66,46 @@ public class PostController {
 
     }
 
-    //rendering the add post page 
+    // rendering the add post page
     @GetMapping("/posts/add")
     @PreAuthorize("isAuthenticated()")
-    public String addPost(Model model, Principal principal){
+    public String addPost(Model model, Principal principal) {
 
         String authUser = "email";
-        if(principal != null){
+        if (principal != null) {
             authUser = principal.getName();
         }
 
         Optional<Account> optionalAccount = accountService.findOneByEmail(authUser);
-        if(optionalAccount.isPresent()){
+        if (optionalAccount.isPresent()) {
             Post post = new Post();
             post.setAccount(optionalAccount.get());
             model.addAttribute("post", post);
 
             return "post_views/post_add";
 
-        }else{
+        } else {
             return "redirect:/";
         }
-
-
     }
-
 
     @PostMapping("/post/add")
     @PreAuthorize("isAuthenticated()")
-    public String addNewPost(@ModelAttribute Post post, Principal principal){
+    public String addNewPost(@ModelAttribute Post post, Principal principal) {
         String authUser = "email";
-        
-        if(principal != null){
+
+        if (principal != null) {
             authUser = principal.getName();
         }
 
-        if(post.getAccount().getEmail().compareTo(authUser) < 0){
+        if (post.getAccount().getEmail().compareTo(authUser) < 0) {
             return "redirect:/?error";
         }
 
+        System.out.println(post.getId());
         postService.save(post);
+        System.out.println(post.getId());
         return "redirect:/post/" + post.getId();
-
 
     }
 
