@@ -4,30 +4,57 @@
   xmlns:th="http://www.thymeleaf.org"
   xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
 >
-  <head th:replace="~{/fragments/head :: head}"></head>
+  <head th:replace="~{/fragments/head :: head}">
+    <!-- Font Awesome CDN -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+  </head>
 
   <body>
     <header th:replace="~{/fragments/header :: header}"></header>
 
     <div class="container mt-5">
-      
       <section sec:authorize="isAuthenticated()" class="mt-4">
         <div class="container">
           <div class="table-responsive">
-            <table class="table table-hover align-middle shadow-sm rounded">
+            <table
+              class="table table-hover align-middle shadow-sm rounded overflow-hidden"
+            >
               <thead class="table-dark">
                 <tr>
+                  <th></th>
                   <th scope="col">Title</th>
                   <th scope="col">Author</th>
                   <th scope="col">Body</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr th:each="post : ${posts}">
+              <tbody class="bg-light">
+                <tr th:each="post : ${posts}" class="border rounded-3">
                   <td>
-                    <a th:href="@{'/post/' + ${post.id}}" th:text="${post.title}" class="fw-bold text-decoration-none">Title</a>
+                    <!-- Clickable FontAwesome Edit Icon -->
+                    <a
+                      th:href="@{'/edit_post/' + ${post.id}}"
+                      class="text-decoration-none text-primary me-2"
+                    >
+                      <i class="fa-solid fa-pencil-alt"></i>
+                    </a>
                   </td>
-                  <td th:text="${post.account.firstname}" class="text-muted"></td>
+                  <td>
+                    <!-- Clickable Title -->
+                    <a
+                      th:href="@{'/post/' + ${post.id}}"
+                      th:text="${post.title}"
+                      class="fw-bold text-decoration-none text-dark"
+                    >
+                      Title
+                    </a>
+                  </td>
+                  <td
+                    th:text="${post.account.firstname}"
+                    class="text-muted"
+                  ></td>
                   <td th:utext="${post.body}"></td>
                 </tr>
               </tbody>

@@ -33,7 +33,9 @@
             </div>
             
 
-            <div sec:authorize="isAuthenticated()" th:if="${isOwner}">
+            <!-- <div sec:authorize="isAuthenticated()" th:if="${isOwner}"> -->
+            <div sec:authorize="isAuthenticated()">
+
               <a
                 th:href="@{'/edit_post/' + ${post.id}}"
                 class="btn btn-dark"

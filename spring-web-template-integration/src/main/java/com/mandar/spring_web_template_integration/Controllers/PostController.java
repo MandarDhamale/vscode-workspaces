@@ -109,4 +109,19 @@ public class PostController {
 
     }
 
+    @GetMapping("/edit_post/{id}")
+    @PreAuthorize("isAuthenticated()")
+    public String getPostForEdit(@PathVariable Long id, Model model) {
+
+        Optional<Post> optionalPost = postService.getById(id);
+
+        if (optionalPost.isPresent()) {
+            Post post = optionalPost.get();
+            model.addAttribute("post", post);
+            return "post_views/post_edit";
+        } else {
+            return "404";
+        }
+    }
+
 }

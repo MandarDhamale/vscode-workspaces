@@ -1,32 +1,173 @@
 <!DOCTYPE html>
-<html
-  lang="en"
-  xmlns:th="http://www.thymeleaf.org"
-  xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
->
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
   <head th:replace="~{/fragments/head :: head}"></head>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    .fixed-card {
+      height: 400px; /* Ensures all cards have the same height */
+      display: flex;
+      flex-direction: column;
+    }
+
+    .scrollable-content {
+      flex-grow: 1;
+      overflow-y: auto;
+      max-height: 300px; /* Ensures scrolling inside */
+    }
+
+    .table thead tr:first-child th:first-child {
+      border-top-left-radius: 10px;
+    }
+
+    .table thead tr:first-child th:last-child {
+      border-top-right-radius: 10px;
+    }
+
+    .table tbody tr:last-child td:first-child {
+      border-bottom-left-radius: 10px;
+    }
+
+    .table tbody tr:last-child td:last-child {
+      border-bottom-right-radius: 10px;
+    }
+  </style>
 
   <body>
     <header th:replace="~{/fragments/header :: header}"></header>
 
-    <div class="container mt-5">
-
-      <section sec:authorize="isAuthenticated()" class="mt-4">
-        <div class="container">
-          <div class="posts" th:each="post : ${posts}">
-            <div class="post-card">
-              <h3>
-                <a th:href="@{'/post/' + ${post.id}}" th:text="${post.title}"
-                  >Title</a
-                >
-              </h3>
-              <h5 th:text="'Author: ' + ${post.account.firstname}"></h5>
-              <p th:utext="${post.body}"></p>
+    <div class="container mt-4">
+      <div class="row g-3">
+        
+        <!-- Active Suppliers Card -->
+        <div class="col-lg-6 col-md-12">
+          <div class="card p-3 shadow rounded-lg border-0 fixed-card">
+            <h4 class="text-center mb-3 text-black fw-bold border-bottom pb-2">Active Suppliers</h4>
+            <div class="table-responsive scrollable-content">
+              <table class="table table-hover table-sm">
+                <thead class="table-dark">
+                  <tr>
+                    <th>Supplier Name</th>
+                    <th>Created By</th>
+                    <th>Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr th:each="post : ${posts}">
+                    <td><a th:href="@{'/post/' + ${post.id}}" th:text="${post.title}">Title</a></td>
+                    <td th:text="${post.account.firstname}"></td>
+                    <td th:utext="${post.body}"></td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
-          </div>  
+          </div>
         </div>
-      </section>
+        
+        <!-- Contracts Card -->
+        <div class="col-lg-6 col-md-12">
+          <div class="card p-3 shadow rounded-lg border-0 fixed-card">
+            <h4 class="text-center mb-3 text-black fw-bold border-bottom pb-2">Contracts</h4>
+            <div class="table-responsive scrollable-content">
+              <table class="table table-hover table-sm">
+                <thead class="table-dark">
+                  <tr>
+                    <th>Contract ID</th>
+                    <th>Supplier</th>
+                    <th>Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>#001</td>
+                    <td>Tata Steel</td>
+                    <td>$10,000</td>
+                  </tr>
+                  <tr>
+                    <td>#002</td>
+                    <td>Reliance Industries</td>
+                    <td>$15,500</td>
+                  </tr>
+                  <tr>
+                    <td>#003</td>
+                    <td>Larsen & Toubro</td>
+                    <td>$8,750</td>
+                  </tr>
+                  <tr>
+                    <td>#004</td>
+                    <td>Adani Group</td>
+                    <td>$12,000</td>
+                  </tr>
+                  <tr>
+                    <td>#005</td>
+                    <td>Mahindra & Mahindra</td>
+                    <td>$9,500</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Charts Row -->
+      <div class="row g-3 mt-3">
+        <!-- Bar Chart Card -->
+        <div class="col-lg-6 col-md-12">
+          <div class="card p-3 shadow rounded-lg border-0 fixed-card">
+            <h4 class="text-center mb-3 text-black fw-bold border-bottom pb-2">Supplier Performance</h4>
+            <div class="scrollable-content">
+              <canvas id="barChart"></canvas>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Pie Chart Card -->
+        <div class="col-lg-6 col-md-12">
+          <div class="card p-3 shadow rounded-lg border-0 fixed-card">
+            <h4 class="text-center mb-3 text-black fw-bold border-bottom pb-2">Contract Distribution</h4>
+            <div class="scrollable-content">
+              <canvas id="pieChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+
+    <script>
+      const barCtx = document.getElementById('barChart').getContext('2d');
+      new Chart(barCtx, {
+        type: 'bar',
+        data: {
+          labels: ['Tata Steel', 'Reliance Industries', 'Larsen & Toubro', 'Adani Group', 'Mahindra & Mahindra'],
+          datasets: [{
+            label: 'Performance Score',
+            data: [75, 85, 90, 80, 88],
+            backgroundColor: ['#A7C7E7', '#FFDDC1', '#B5EAD7', '#FFC0CB', '#D4A5A5']
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false
+        }
+      });
+      
+      const pieCtx = document.getElementById('pieChart').getContext('2d');
+      new Chart(pieCtx, {
+        type: 'pie',
+        data: {
+          labels: ['Tata Steel', 'Reliance Industries', 'Larsen & Toubro', 'Adani Group', 'Mahindra & Mahindra'],
+          datasets: [{
+            data: [25, 30, 20, 15, 10],
+            backgroundColor: ['#A7C7E7', '#FFDDC1', '#B5EAD7', '#FFC0CB', '#D4A5A5']
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false
+        }
+      });
+    </script>
 
     <footer th:replace="~{/fragments/footer :: footer}"></footer>
   </body>

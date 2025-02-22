@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="~{/fragments/head :: head}"> </head>
+
+  <body>
+    <header th:replace="~{/fragments/header :: header}"></header>
+
+    <div class="container mt-5">
+      <h2 class="text-center">Edit Post</h2>
+
+      <form
+        th:action="@{'/post/edit/{id}' (id=${post.id})}"
+        th:object="${post}"
+        method="post"
+        class="mt-4"
+      >
+        <input
+          type="hidden"
+          id="account"
+          name="account"
+          th:field="*{account}"
+        />
+        <p th:text="${post.account}"></p>
+
+
+        <div class="mb-3">
+          <label for="title" class="form-label">Title</label>
+          <input
+            type="text"
+            th:field="*{title}"
+            class="form-control"
+            id="title"
+            name="title"
+            required
+            placeholder="Enter post title"
+          />
+        </div>
+
+        <div class="mb-3">
+          <label for="body" class="form-label">Body</label>
+          <textarea
+            class="form-control"
+            th:field="*{body}"
+            id="body"
+            name="body"
+            rows="5"
+            required
+          ></textarea>
+        </div>
+
+        <div class="d-flex justify-content-center">
+          <button type="submit" class="btn btn-dark">Update</button>
+        </div>
+      </form>
+    </div>
+
+    <footer th:replace="~{/fragments/footer :: footer}"></footer>
+
+    <script>
+      function loadCKEditor() {
+        if (typeof CKEDITOR !== "undefined") {
+          CKEDITOR.replace("body");
+        } else {
+          console.warn("CKEditor not loaded, retrying in 500ms...");
+          setTimeout(loadCKEditor, 500);
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", loadCKEditor);
+    </script>
+  </body>
+</html>
