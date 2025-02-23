@@ -11,7 +11,7 @@
     </h2>
           
       <form
-        th:action="@{'/post/edit/' + ${post.id}}"
+        th:action="@{'/post/edit/{id}' (id=${post.id })}"
         th:object="${post}"
         method="post"
         class="mt-4"
