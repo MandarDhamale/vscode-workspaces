@@ -25,6 +25,7 @@
               <thead class="table-dark">
                 <tr>
                   <th></th>
+                  <th scope="col"> Supplier ID</th>
                   <th scope="col">Title</th>
                   <th scope="col">Author</th>
                   <th scope="col">Body</th>
@@ -50,6 +51,7 @@
                       <i class="fa-regular fa-trash-can"></i>
                     </a>
                   </td>
+                  <td th:text="${post.id}"> </td>
                   <td>
                     <!-- Clickable Title -->
                     <a
