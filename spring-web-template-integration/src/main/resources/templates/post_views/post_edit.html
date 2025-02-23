@@ -11,7 +11,7 @@
     </h2>
           
       <form
-        th:action="@{'/post/edit/{id}' (id=${post.id})}"
+        th:action="@{'/post/edit/' + ${post.id}}"
         th:object="${post}"
         method="post"
         class="mt-4"
@@ -49,6 +49,7 @@
           ></textarea>
         </div>
 
+        <div>Created at <span th:text="${post.createdAt}"></span></div>
         <div>Last modified at <span th:text="${post.updatedAt}"></span></div>
 
         <div class="d-flex justify-content-center">

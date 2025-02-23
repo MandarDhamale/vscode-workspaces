@@ -124,4 +124,25 @@ public class PostController {
         }
     }
 
+    
+
+    @PostMapping("/post/edit/{id}")
+    @PreAuthorize("isAuthenticated()")
+    public String updatePost(@PathVariable Long id, @ModelAttribute Model model, Post post){
+
+        Optional<Post> optionalPost = postService.getById(id);
+        if(optionalPost.isPresent()){
+            Post existingPost = optionalPost.get();
+            existingPost.setTitle(post.getTitle());
+            existingPost.setBody(post.getBody());
+            postService.save(existingPost);
+        }
+
+
+        return "redirect:/edit_post/" + post.getId();
+
+    }
+
+
+
 }
