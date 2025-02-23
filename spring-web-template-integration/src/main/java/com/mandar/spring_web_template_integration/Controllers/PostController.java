@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.mandar.spring_web_template_integration.models.Account;
 import com.mandar.spring_web_template_integration.models.Post;
@@ -126,7 +127,7 @@ public class PostController {
 
     @PostMapping("/post/edit/{id}")
     @PreAuthorize("isAuthenticated()")
-    public String updatePost(@PathVariable Long id, @ModelAttribute Model model, Post post) {
+    public String updatePost(@PathVariable Long id, @ModelAttribute Model model, Post post, RedirectAttributes redirectAttributes) {
 
         Optional<Post> optionalPost = postService.getById(id);
         if (optionalPost.isPresent()) {
@@ -136,7 +137,10 @@ public class PostController {
             existingPost.setBody(post.getBody());
 
             postService.save(existingPost);
+            
         }
+
+        redirectAttributes.addFlashAttribute("successMessage", " Data Updated Successfully");
 
         return "redirect:/edit_post/" + post.getId();
 

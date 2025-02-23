@@ -5,11 +5,26 @@
   <body>
     <header th:replace="~{/fragments/header :: header}"></header>
 
+
+
+
     <div class="container mt-5">
+
+          <!-- Compact Success Message -->
+<div th:if="${successMessage}" class="alert alert-success d-inline-block py-1 px-3 small shadow-sm rounded-2" role="alert">
+  <i class="fa-solid fa-circle-check me-1"></i>
+  <span th:text="${successMessage}"></span>
+  <button type="button" class="btn-close btn-sm" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+
       <h2 class="text-left">
-        <strong>SUP<span th:text="${post.id}"></span>:<span th:text="${post.title}"></span></strong>
-    </h2>
-          
+        <strong
+          >SUP<span th:text="${post.id}"></span>:<span
+            th:text="${post.title}"
+          ></span
+        ></strong>
+      </h2>
+
       <form
         th:action="@{'/post/edit/{id}' (id=${post.id })}"
         th:object="${post}"
@@ -22,7 +37,6 @@
           name="account"
           th:field="*{account}"
         />
-
 
         <div class="mb-3">
           <label for="title" class="form-label">Title</label>
@@ -53,7 +67,7 @@
         <div>Last modified at <span th:text="${post.updatedAt}"></span></div>
 
         <div class="d-flex justify-content-center">
-          <button type="submit" class="btn btn-dark">Update</button>
+          <button type="submit" class="btn btn-dark">Save</button>
         </div>
       </form>
     </div>
