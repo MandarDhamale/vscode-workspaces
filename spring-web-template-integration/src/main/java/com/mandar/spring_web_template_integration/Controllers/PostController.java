@@ -127,7 +127,8 @@ public class PostController {
 
     @PostMapping("/post/edit/{id}")
     @PreAuthorize("isAuthenticated()")
-    public String updatePost(@PathVariable Long id, @ModelAttribute Model model, Post post, RedirectAttributes redirectAttributes) {
+    public String updatePost(@PathVariable Long id, @ModelAttribute Model model, Post post,
+            RedirectAttributes redirectAttributes) {
 
         Optional<Post> optionalPost = postService.getById(id);
         if (optionalPost.isPresent()) {
@@ -137,7 +138,7 @@ public class PostController {
             existingPost.setBody(post.getBody());
 
             postService.save(existingPost);
-            
+
         }
 
         redirectAttributes.addFlashAttribute("successMessage", " Data Updated Successfully");
@@ -148,18 +149,17 @@ public class PostController {
 
     @GetMapping("/delete_post/{id}")
     @PreAuthorize("isAuthenticated()")
-    public String deletePost(@PathVariable Long id){
+    public String deletePost(@PathVariable Long id) {
 
         Optional<Post> optionalPost = postService.getById(id);
-        if(optionalPost.isPresent()){
+        if (optionalPost.isPresent()) {
             Post post = optionalPost.get();
             postService.delete(post);
             return "redirect:/post_browse";
-        }else{
+        } else {
             return "404";
         }
 
     }
-
 
 }

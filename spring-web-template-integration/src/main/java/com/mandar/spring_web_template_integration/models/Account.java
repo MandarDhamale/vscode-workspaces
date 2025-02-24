@@ -11,6 +11,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -25,12 +27,17 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
+    @Email(message = "Invalid email")
+    @NotEmpty(message = "Email cannot be empty")
     private String email;
 
+    @NotEmpty(message = "Password cannot be empty")
     private String password;
 
+    @NotEmpty(message = "Firstname cannot be empty")
     private String firstname;
 
+    @NotEmpty(message = "Lastname cannot be empty")
     private String lastname;
 
     private String role;
