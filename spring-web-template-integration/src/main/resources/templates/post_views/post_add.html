@@ -6,7 +6,7 @@
     <header th:replace="~{/fragments/header :: header}"></header>
 
     <div class="container mt-5">
-      <h2 class="text-center">Create a New Post</h2>
+      <h2 class="text-center">Create a New Supplier</h2>
 
       <form
         th:action="@{/post/add}"
@@ -20,11 +20,9 @@
           name="account"
           th:field="*{account}"
         />
-        <p th:text="${post.account}"></p>
-
 
         <div class="mb-3">
-          <label for="title" class="form-label">Title</label>
+          <label for="title" class="form-label">Supplier Name</label>
           <input
             type="text"
             th:field="*{title}"
@@ -37,7 +35,7 @@
         </div>
 
         <div class="mb-3">
-          <label for="body" class="form-label">Body</label>
+          <label for="body" class="form-label">Description</label>
           <textarea
             class="form-control"
             th:field="*{body}"
@@ -49,7 +47,7 @@
         </div>
 
         <div class="d-flex justify-content-center">
-          <button type="submit" class="btn btn-dark">Create Post</button>
+          <button type="submit" class="btn btn-dark">Create Supplier</button>
         </div>
       </form>
     </div>
