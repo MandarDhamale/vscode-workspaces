@@ -30,6 +30,8 @@ public class Post {
     @Column(columnDefinition = "TEXT") // signifies that this column will store long text or longer format of text
     private String body;
 
+    private String status;
+
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;

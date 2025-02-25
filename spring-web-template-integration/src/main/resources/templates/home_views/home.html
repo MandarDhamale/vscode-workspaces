@@ -48,7 +48,8 @@
                 <thead class="table-dark">
                   <tr>
                     <th>Supplier Name</th>
-                    <th>Created By</th>
+                    <th>Creator</th>
+                    <th>Status</th>
                     <th>Description</th>
                   </tr>
                 </thead>
@@ -56,6 +57,7 @@
                   <tr th:each="post : ${posts}">
                     <td><a th:href="@{'/post/' + ${post.id}}" th:text="${post.title}">Title</a></td>
                     <td th:text="${post.account.firstname}"></td>
+                    <td th:text="${post.status}"></td>
                     <td th:utext="${post.body}"></td>
                   </tr>
                 </tbody>

@@ -27,6 +27,7 @@
                   <th></th>
                   <th scope="col">Supplier ID</th>
                   <th scope="col">Supplier Name</th>
+                  <th scope="col">Status</th>
                   <th scope="col">Created By</th>
                   <th scope="col">Description</th>
                 </tr>
@@ -63,6 +64,7 @@
                       Title
                     </a>
                   </td>
+                  <td th:text="${post.status}"></td>
                   <td
                     th:text="${post.account.firstname}"
                     class="text-muted"
