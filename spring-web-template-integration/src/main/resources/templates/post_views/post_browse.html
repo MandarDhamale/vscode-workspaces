@@ -40,7 +40,13 @@
                       th:href="@{'/edit_post/' + ${post.id}}"
                       class="text-decoration-none text-primary me-2"
                     >
-                      <i class="fa-regular fa-pen-to-square"></i>
+                      <i
+                        class="fa-solid fa-pencil"
+                        style="color: #bebebe; transition: color 0.1s ease"
+                        onmouseover="this.style.color='darkblue'"
+                        onmouseout="this.style.color='#bebebe'"
+                      >
+                      </i>
                     </a>
 
                     <!-- Delete Icon (with confirmation) -->
@@ -50,7 +56,12 @@
                       class="text-decoration-none text-danger delete-post"
                       sec:authorize="hasRole('ROLE_ADMIN')"
                     >
-                      <i class="fa-regular fa-trash-can"></i>
+                      <i
+                        class="fa-regular fa-trash-can"
+                        style="color: #bebebe; transition: color 0.1s ease"
+                        onmouseover="this.style.color='red'"
+                        onmouseout="this.style.color='#bebebe'"
+                      ></i>
                     </a>
                   </td>
                   <td th:text="${post.id}"></td>
