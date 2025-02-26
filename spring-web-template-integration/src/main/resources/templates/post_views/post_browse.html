@@ -20,7 +20,7 @@
         <div class="container">
           <div class="table-responsive">
             <table
-              class="table table-hover align-middle shadow-sm rounded overflow-hidden"
+              class="table table-hover align-middle shadow-sm rounded overflow-hidden table-sm"
             >
               <thead class="table-dark">
                 <tr>
@@ -67,10 +67,14 @@
                   <td th:text="${post.id}"></td>
                   <td>
                     <!-- Clickable Title -->
+                    <i
+                      class="fa-solid fa-magnifying-glass"
+                      style="color: #bebebe"
+                    ></i>
                     <a
                       th:href="@{'/post/' + ${post.id}}"
                       th:text="${post.title}"
-                      class="fw-bold text-decoration-none text-dark"
+                      class="fw-bold text-decoration-none"
                     >
                       Title
                     </a>

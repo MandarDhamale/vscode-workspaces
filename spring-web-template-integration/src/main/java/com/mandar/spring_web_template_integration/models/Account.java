@@ -1,7 +1,10 @@
 package com.mandar.spring_web_template_integration.models;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,6 +15,8 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -39,6 +44,15 @@ public class Account {
 
     @NotEmpty(message = "Lastname cannot be empty")
     private String lastname;
+
+    private String gender;
+
+    @Min(value = 18)
+    @Max(value = 110)    
+    private Integer age;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate dateOfBirth;
 
     private String role;
 
