@@ -54,6 +54,8 @@ public class Account {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dateOfBirth;
 
+    private String photo;
+
     private String role;
 
     // one to many relationship with table Posts -> one account can have one or

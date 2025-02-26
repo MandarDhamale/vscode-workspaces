@@ -31,10 +31,18 @@ public class AccountService implements UserDetailsService {
     private PasswordEncoder passwordEncoder;
 
     public Account save(Account account) {
+        
         account.setPassword(passwordEncoder.encode(account.getPassword()));
         if (account.getRole() == null) {
             account.setRole(Roles.USER.getRole());
         }
+
+        if(account.getPhoto() == null){
+            String path = "/resources/static/images/default_profile_picture.jpg";
+            account.setPhoto(path);
+        }
+
+
         return accountRepository.save(account);
     }
 
