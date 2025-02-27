@@ -67,6 +67,12 @@ public class SeedData implements CommandLineRunner {
         Account account03 = createAccount("user@iprocure.com", "user", "user", null, new HashSet<>());
         Account account04 = createAccount("super_editor@iprocure.com", "super_editor", "super_editor", Roles.EDITOR.getRole(), allAuthorities);
 
+        account01.setPassword(DEFAULT_PASSWORD);
+        account02.setPassword(DEFAULT_PASSWORD);
+        account03.setPassword(DEFAULT_PASSWORD);
+        account04.setPassword(DEFAULT_PASSWORD);
+
+
         accountService.save(account01);
         accountService.save(account02);
         accountService.save(account03);
