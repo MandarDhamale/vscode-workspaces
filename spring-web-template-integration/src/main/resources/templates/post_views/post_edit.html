@@ -5,17 +5,22 @@
   <body>
     <header th:replace="~{/fragments/header :: header}"></header>
 
-
-
-
     <div class="container mt-5">
-
-          <!-- Compact Success Message -->
-<div th:if="${successMessage}" class="alert alert-success d-inline-block py-1 px-3 small shadow-sm rounded-2" role="alert">
-  <i class="fa-solid fa-circle-check me-1"></i>
-  <span th:text="${successMessage}"></span>
-  <button type="button" class="btn-close btn-sm" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>
+      <!-- Compact Success Message -->
+      <div
+        th:if="${successMessage}"
+        class="alert alert-success d-inline-block py-1 px-3 small shadow-sm rounded-2"
+        role="alert"
+      >
+        <i class="fa-solid fa-circle-check me-1"></i>
+        <span th:text="${successMessage}"></span>
+        <button
+          type="button"
+          class="btn-close btn-sm"
+          data-bs-dismiss="alert"
+          aria-label="Close"
+        ></button>
+      </div>
 
       <h2 class="text-left">
         <strong
@@ -52,6 +57,19 @@
         </div>
 
         <div class="mb-3">
+          <label for="sapId" class="form-label">SAP ID</label>
+          <input
+            type="text"
+            th:field="*{sapId}"
+            class="form-control"
+            id="sapId"
+            name="sapId"
+            required
+            placeholder="Enter SAP ID"
+          />
+        </div>
+
+        <div class="mb-3">
           <label for="body" class="form-label">Description</label>
           <textarea
             class="form-control"
@@ -61,6 +79,31 @@
             rows="5"
             required
           ></textarea>
+        </div>
+
+        <div class="mb-3">
+          <label for="country" class="form-label">Country</label>
+          <select class="form-select" th:field="*{country}" id="country" name="country" required>
+            <option value="">Select a country</option>
+            <option value="India">India</option>
+            <option value="USA">USA</option>
+            <option value="UK">UK</option>
+            <option value="Germany">Germany</option>
+            <option value="Canada">Canada</option>
+            <option value="Australia">Australia</option>
+            <option value="France">France</option>
+            <option value="Japan">Japan</option>
+            <option value="Brazil">Brazil</option>
+            <option value="South Africa">South Africa</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label for="status" class="form-label">Status</label>
+          <select class="form-select" th:field="*{status}" id="status" name="status" required>
+            <option value="Active">Active</option>
+            <option value="Inactive">Inactive</option>
+          </select>
         </div>
 
         <div>Created at <span th:text="${post.createdAt}"></span></div>

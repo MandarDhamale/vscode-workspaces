@@ -136,6 +136,9 @@ public class PostController {
 
             existingPost.setTitle(post.getTitle());
             existingPost.setBody(post.getBody());
+            existingPost.setStatus(post.getStatus());
+            existingPost.setSapId(post.getSapId());
+            existingPost.setCountry(post.getCountry());
 
             postService.save(existingPost);
 

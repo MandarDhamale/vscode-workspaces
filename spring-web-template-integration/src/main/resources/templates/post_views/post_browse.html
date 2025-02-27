@@ -15,83 +15,68 @@
   <body>
     <header th:replace="~{/fragments/header :: header}"></header>
 
-    <div class="container mt-5">
-      <section sec:authorize="isAuthenticated()" class="mt-4">
-        <div class="container">
-          <div class="table-responsive">
-            <table
-              class="table table-hover align-middle shadow-sm rounded overflow-hidden table-sm"
-            >
-              <thead class="table-dark">
-                <tr>
-                  <th></th>
-                  <th scope="col">Supplier ID</th>
-                  <th scope="col">Supplier Name</th>
-                  <th scope="col">Status</th>
-                  <th scope="col">Created By</th>
-                  <th scope="col">Description</th>
-                </tr>
-              </thead>
-              <tbody class="bg-light">
-                <tr th:each="post : ${posts}" class="border rounded-3">
-                  <td>
-                    <!-- Edit Icon -->
-                    <a
-                      th:href="@{'/edit_post/' + ${post.id}}"
-                      class="text-decoration-none text-primary me-2"
-                    >
-                      <i
-                        class="fa-solid fa-pencil"
-                        style="color: #bebebe; transition: color 0.1s ease"
-                        onmouseover="this.style.color='darkblue'"
-                        onmouseout="this.style.color='#bebebe'"
-                      >
-                      </i>
-                    </a>
-
-                    <!-- Delete Icon (with confirmation) -->
-                    <a
-                      href="#"
-                      th:attr="data-id=${post.id}"
-                      class="text-decoration-none text-danger delete-post"
-                      sec:authorize="hasRole('ROLE_ADMIN')"
-                    >
-                      <i
-                        class="fa-regular fa-trash-can"
-                        style="color: #bebebe; transition: color 0.1s ease"
-                        onmouseover="this.style.color='red'"
-                        onmouseout="this.style.color='#bebebe'"
-                      ></i>
-                    </a>
-                  </td>
-                  <td th:text="${post.id}"></td>
-                  <td>
-                    <!-- Clickable Title -->
-                    <i
-                      class="fa-solid fa-magnifying-glass"
-                      style="color: #bebebe"
-                    ></i>
-                    <a
-                      th:href="@{'/post/' + ${post.id}}"
-                      th:text="${post.title}"
-                      class="fw-bold text-decoration-none"
-                    >
-                      Title
-                    </a>
-                  </td>
-                  <td th:text="${post.status}"></td>
-                  <td
-                    th:text="${post.account.firstname}"
-                    class="text-muted"
-                  ></td>
-                  <td th:utext="${post.body}"></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+    <div class="container-fluid px-4 mt-4">
+      <section sec:authorize="isAuthenticated()">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle shadow-sm rounded overflow-hidden table-sm table-bordered w-100">
+            <thead class="table-dark">
+              <tr>
+                <th class="px-3 py-2"></th>
+                <th class="px-3 py-2">Supplier ID</th>
+                <th class="px-3 py-2">Supplier Name</th>
+                <th class="px-3 py-2">Status</th>
+                <th class="px-3 py-2">SAP ID</th>
+                <th class="px-3 py-2">Country</th>
+                <th class="px-3 py-2">Created By</th>
+                <th class="px-3 py-2">Description</th>
+              </tr>
+            </thead>
+            <tbody class="bg-light text-sm">
+              <tr th:each="post : ${posts}" class="border rounded-3">
+                <td class="px-3 py-2">
+                  <!-- Edit Icon -->
+                  <a th:href="@{'/edit_post/' + ${post.id}}" class="text-decoration-none text-primary me-2">
+                    <i class="fa-solid fa-pencil"
+                       style="color: #bebebe; transition: color 0.1s ease"
+                       onmouseover="this.style.color='darkblue'"
+                       onmouseout="this.style.color='#bebebe'">
+                    </i>
+                  </a>
+                  <!-- Delete Icon -->
+                  <a href="#" th:attr="data-id=${post.id}"
+                     class="text-decoration-none text-danger delete-post"
+                     sec:authorize="hasRole('ROLE_ADMIN')">
+                    <i class="fa-regular fa-trash-can"
+                       style="color: #bebebe; transition: color 0.1s ease"
+                       onmouseover="this.style.color='red'"
+                       onmouseout="this.style.color='#bebebe'">
+                    </i>
+                  </a>
+                </td>
+                <td class="px-3 py-2" th:text="${post.id}"></td>
+                <td class="px-3 py-2">
+                  <i class="fa-solid fa-magnifying-glass" style="color: #bebebe"></i>
+                  <a th:href="@{'/post/' + ${post.id}}" th:text="${post.title}" class="fw-bold text-decoration-none">
+                    Title
+                  </a>
+                </td>
+                <td class="px-3 py-2">
+                  <span th:text="${post.status}"
+                        th:classappend="${post.status == 'Active' ? 'bg-success text-white rounded-pill px-2 py-1 small' :
+                                         (post.status == 'Inactive' ? 'bg-danger text-white rounded-pill px-2 py-1 small' : '')}">
+                  </span>
+                </td>
+                <td class="px-3 py-2" th:text="${post.sapId}"></td>
+                <td class="px-3 py-2" th:text="${post.country}"></td>
+                <td class="px-3 py-2" th:text="${post.account.firstname}"></td>
+                <td class="px-3 py-2" th:utext="${post.body}"></td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </section>
     </div>
+    
 
     <footer th:replace="~{/fragments/footer :: footer}"></footer>
 

@@ -40,4 +40,10 @@ public class Post {
     @JoinColumn(name = "account_id", referencedColumnName = "id", nullable = false)
     private Account account;
 
+    //New fields
+
+    private String country;
+
+    private String sapId;
+
 }
