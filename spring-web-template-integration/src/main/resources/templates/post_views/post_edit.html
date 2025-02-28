@@ -1,173 +1,244 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-  <head th:replace="~{/fragments/head :: head}"> </head>
+  <head th:replace="~{/fragments/head :: head}"></head>
 
   <body>
     <header th:replace="~{/fragments/header :: header}"></header>
 
     <div class="container mt-5">
-      <!-- Compact Success Message -->
-      <div
-        th:if="${successMessage}"
-        class="alert alert-success d-inline-block py-1 px-3 small shadow-sm rounded-2"
-        role="alert"
-      >
-        <i class="fa-solid fa-circle-check me-1"></i>
-        <span th:text="${successMessage}"></span>
-        <button
-          type="button"
-          class="btn-close btn-sm"
-          data-bs-dismiss="alert"
-          aria-label="Close"
-        ></button>
-      </div>
-
+      <!-- Page Heading -->
       <h2 class="text-left">
         <strong
-          >SUP<span th:text="${post.id}"></span>:<span
+          >VEN<span th:text="${post.id}"></span>:<span
             th:text="${post.title}"
           ></span
         ></strong>
       </h2>
 
-      <form
-        th:action="@{'/post/edit/{id}' (id=${post.id })}"
-        th:object="${post}"
-        method="post"
-        class="mt-4"
-      >
-        <input
-          type="hidden"
-          id="account"
-          name="account"
-          th:field="*{account}"
-        />
-
-        <!-- Centered Save and Save & Close Buttons -->
-        <div class="d-flex justify-content-center mb-3">
-          <!-- Save Button -->
-          <button type="submit" class="btn btn-success">Save</button>
-
-          <!-- Save and Close Button -->
-          <button
-            type="submit"
-            class="btn btn-warning ms-2"
-            name="action"
-            value="save_close"
+      <div class="row mt-4">
+        <!-- Side Panel -->
+        <div class="col-md-3">
+          <ul
+            class="nav nav-pills flex-column"
+            id="sidePanelTabs"
+            role="tablist"
           >
-            Save & Close
-          </button>
+            <li class="nav-item" role="presentation">
+              <button
+                class="nav-link active"
+                id="vendor-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#vendor-info"
+                type="button"
+                role="tab"
+                aria-controls="vendor-info"
+                aria-selected="true"
+              >
+                <i class="fa-solid fa-store me-1"></i> Vendor Information
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button
+                class="nav-link"
+                id="contacts-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#contacts"
+                type="button"
+                role="tab"
+                aria-controls="contacts"
+                aria-selected="false"
+              >
+                <i class="fa-solid fa-address-book me-1"></i> Contacts
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button
+                class="nav-link"
+                id="action-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#action"
+                type="button"
+                role="tab"
+                aria-controls="action"
+                aria-selected="false"
+              >
+                <i class="fa-solid fa-tasks me-1"></i> Action
+              </button>
+            </li>
+          </ul>
         </div>
-        <hr />
 
-        <div class="row">
-          <!-- Left Column -->
-          <div class="col-md-6">
-            <div class="mb-3">
-              <label for="title" class="form-label">Title</label>
-              <input
-                type="text"
-                th:field="*{title}"
-                class="form-control"
-                id="title"
-                name="title"
-                required
-                placeholder="Enter post title"
-              />
-            </div>
-
-            <div class="mb-3">
-              <label for="sapId" class="form-label">SAP ID</label>
-              <input
-                type="text"
-                th:field="*{sapId}"
-                class="form-control"
-                id="sapId"
-                name="sapId"
-                required
-                placeholder="Enter SAP ID"
-              />
-            </div>
-
-            <div class="mb-3">
-              <label for="status" class="form-label">Status</label>
-              <select
-                class="form-select"
-                th:field="*{status}"
-                id="status"
-                name="status"
-                required
+        <!-- Main Content -->
+        <div class="col-md-9">
+          <div class="tab-content" id="sidePanelContent">
+            <div
+              class="tab-pane fade show active"
+              id="vendor-info"
+              role="tabpanel"
+              aria-labelledby="vendor-tab"
+            >
+                            <!-- Compact Success Message -->
+                            <div
+                            th:if="${successMessage}"
+                            class="alert alert-success  py-1 px-3 small shadow-sm rounded-2"
+                            role="alert"
+                          >
+                            <i class="fa-solid fa-circle-check me-1"></i>
+                            <span th:text="${successMessage}"></span>
+                            <button
+                              type="button"
+                              class="btn-close btn-sm"
+                              data-bs-dismiss="alert"
+                              aria-label="Close"
+                            ></button>
+                          </div>
+              <h4>Vendor Information</h4>
+              <form
+                th:action="@{'/post/edit/{id}' (id=${post.id })}"
+                th:object="${post}"
+                method="post"
+                class="mt-4"
               >
-                <option value="Active">Active</option>
-                <option value="Inactive">Inactive</option>
-              </select>
-            </div>
+                <input
+                  type="hidden"
+                  id="account"
+                  name="account"
+                  th:field="*{account}"
+                />
 
-            <div class="mb-3">
-              <label for="country" class="form-label">Country</label>
-              <select
-                class="form-select"
-                th:field="*{country}"
-                id="country"
-                name="country"
-                required
-              >
-                <option value="">Select a country</option>
-                <option value="India">India</option>
-                <option value="USA">USA</option>
-                <option value="UK">UK</option>
-                <option value="Germany">Germany</option>
-                <option value="Canada">Canada</option>
-                <option value="Australia">Australia</option>
-                <option value="France">France</option>
-                <option value="Japan">Japan</option>
-                <option value="Brazil">Brazil</option>
-                <option value="South Africa">South Africa</option>
-              </select>
-            </div>
 
-            <div class="mb-1">
-              <label class="form-label">Created at: </label
-              ><span th:text="${post.createdAt}"></span>
-            </div>
 
-            <div class="mb-1">
-              <label class="form-label">Last modified at:</label
-              ><span th:text="${post.updatedAt}"></span>
+                <div class="d-flex justify-content-center mb-3">
+                  <button type="submit" class="btn btn-success">Save</button>
+                  <button
+                    type="submit"
+                    class="btn btn-warning ms-2"
+                    name="action"
+                    value="save_close"
+                  >
+                    Save & Close
+                  </button>
+                </div>
+                <hr />
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="title" class="form-label"
+                        ><i class="fa-solid fa-heading me-1"></i> Title</label
+                      >
+                      <input
+                        type="text"
+                        th:field="*{title}"
+                        class="form-control"
+                        id="title"
+                        name="title"
+                        required
+                        placeholder="Enter post title"
+                      />
+                    </div>
+                    <div class="mb-3">
+                      <label for="sapId" class="form-label"
+                        ><i class="fa-solid fa-id-card me-1"></i> SAP ID</label
+                      >
+                      <input
+                        type="text"
+                        th:field="*{sapId}"
+                        class="form-control"
+                        id="sapId"
+                        name="sapId"
+                        required
+                        placeholder="Enter SAP ID"
+                      />
+                    </div>
+                    <div class="mb-3">
+                      <label for="status" class="form-label"
+                        ><i class="fa-solid fa-toggle-on me-1"></i>
+                        Status</label
+                      >
+                      <select
+                        class="form-select"
+                        th:field="*{status}"
+                        id="status"
+                        name="status"
+                        required
+                      >
+                        <option value="Active">Active</option>
+                        <option value="Inactive">Inactive</option>
+                      </select>
+                    </div>
+                    <div class="mb-3">
+                      <label for="country" class="form-label"
+                        ><i class="fa-solid fa-globe me-1"></i> Country</label
+                      >
+                      <select
+                        class="form-select"
+                        th:field="*{country}"
+                        id="country"
+                        name="country"
+                        required
+                      >
+                        <option value="">Select a country</option>
+                        <option value="India">India</option>
+                        <option value="USA">USA</option>
+                        <option value="UK">UK</option>
+                        <option value="Germany">Germany</option>
+                        <option value="Canada">Canada</option>
+                        <option value="Australia">Australia</option>
+                        <option value="France">France</option>
+                        <option value="Japan">Japan</option>
+                        <option value="Brazil">Brazil</option>
+                        <option value="South Africa">South Africa</option>
+                      </select>
+                    </div>
+                    <div class="mb-1">
+                      <label class="form-label">Created at: </label>
+                      <span th:text="${post.createdAt}"></span>
+                    </div>
+                    <div class="mb-1">
+                      <label class="form-label">Last modified at:</label>
+                      <span th:text="${post.updatedAt}"></span>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="body" class="form-label">Description</label>
+                      <textarea
+                        class="form-control"
+                        th:field="*{body}"
+                        id="body"
+                        name="body"
+                        rows="10"
+                        required
+                      ></textarea>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div
+              class="tab-pane fade"
+              id="contacts"
+              role="tabpanel"
+              aria-labelledby="contacts-tab"
+            >
+              <h4>Contacts</h4>
+              <p>Contact information will be displayed here.</p>
+            </div>
+            <div
+              class="tab-pane fade"
+              id="action"
+              role="tabpanel"
+              aria-labelledby="action-tab"
+            >
+              <h4>Action</h4>
+              <p>Actions related to the vendor will be displayed here.</p>
             </div>
           </div>
-
-          <!-- Right Column -->
-          <div class="col-md-6">
-            <div class="mb-3">
-              <label for="body" class="form-label">Description</label>
-              <textarea
-                class="form-control"
-                th:field="*{body}"
-                id="body"
-                name="body"
-                rows="10"
-                required
-              ></textarea>
-            </div>
-          </div>
         </div>
-      </form>
+      </div>
     </div>
 
     <footer th:replace="~{/fragments/footer :: footer}"></footer>
-
-    <script>
-      function loadCKEditor() {
-        if (typeof CKEDITOR !== "undefined") {
-          CKEDITOR.replace("body");
-        } else {
-          console.warn("CKEditor not loaded, retrying in 500ms...");
-          setTimeout(loadCKEditor, 500);
-        }
-      }
-
-      document.addEventListener("DOMContentLoaded", loadCKEditor);
-    </script>
   </body>
 </html>

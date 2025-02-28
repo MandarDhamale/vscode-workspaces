@@ -179,3 +179,12 @@ body {
   padding: 0.75rem 2rem; /* Larger button */
   font-size: 1.1rem; /* Larger font size */
 }
+
+
+.nav-pills .nav-link.active {
+  background-color: #1b2738 !important;
+  color: white !important;
+}
+.nav-pills .nav-link {
+  color: #1b2738 !important;
+}

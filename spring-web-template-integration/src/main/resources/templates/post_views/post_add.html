@@ -6,7 +6,7 @@
     <header th:replace="~{/fragments/header :: header}"></header>
 
     <div class="container mt-5">
-      <h2 class="text-center">Create a New Supplier</h2>
+      <h2 class="text-center">Create a New Vendor</h2>
 
       <form
         th:action="@{/post/add}"
@@ -22,7 +22,7 @@
         />
 
         <div class="mb-3">
-          <label for="title" class="form-label">Supplier Name</label>
+          <label for="title" class="form-label">Vendor Name</label>
           <input
             type="text"
             th:field="*{title}"
