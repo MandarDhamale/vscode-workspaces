@@ -37,7 +37,7 @@ public class AccountController {
     @PostMapping("/register")
     public String registerUser(@Valid @ModelAttribute Account account, BindingResult result) {
 
-        if(result.hasErrors()){
+        if (result.hasErrors()) {
             return "account_views/register";
         }
 
@@ -54,26 +54,25 @@ public class AccountController {
     @GetMapping("/profile")
     @PreAuthorize("isAuthenticated()")
     public String profile(Model model, Principal principal) {
-
-
-        String authUser = "email";
-        if(principal != null){
-            authUser = principal.getName();
+    
+        if (principal == null) {
+            return "redirect:/login"; // Redirect to login if user is not authenticated
         }
-
+    
+        String authUser = principal.getName();
         Optional<Account> optionalAccount = accountService.findOneByEmail(authUser);
-
-        if(optionalAccount.isPresent()){
+    
+        if (optionalAccount.isPresent()) {
             Account account = optionalAccount.get();
             model.addAttribute("account", account);
             model.addAttribute("photo", account.getPhoto());
+        } else {
+            model.addAttribute("error", "Account not found.");
+            return "error_page"; // Redirect to a custom error page
         }
-
-
+    
         return "account_views/profile";
-
-
-
     }
+    
 
 }
