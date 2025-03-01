@@ -36,18 +36,17 @@
   <body>
     <header th:replace="~{/fragments/header :: header}"></header>
 
-    <div class="container mt-4">
+    <div class="container-fluid mt-4 px-4">
       <div class="row g-3">
-        
         <!-- Active Suppliers Card -->
         <div class="col-lg-6 col-md-12">
           <div class="card p-3 shadow rounded-lg border-0 fixed-card">
-            <h4 class="text-center mb-3 text-black fw-bold border-bottom pb-2">Active Suppliers</h4>
+            <h4 class="text-center mb-3 text-black fw-bold border-bottom pb-2">Vendors</h4>
             <div class="table-responsive scrollable-content">
               <table class="table table-hover table-sm">
                 <thead class="table-dark">
                   <tr>
-                    <th>Supplier Name</th>
+                    <th>Vendor Name</th>
                     <th>Creator</th>
                     <th>Status</th>
                     <th>Description</th>
@@ -65,7 +64,7 @@
             </div>
           </div>
         </div>
-        
+
         <!-- Contracts Card -->
         <div class="col-lg-6 col-md-12">
           <div class="card p-3 shadow rounded-lg border-0 fixed-card">
@@ -111,19 +110,19 @@
           </div>
         </div>
       </div>
-      
+
       <!-- Charts Row -->
       <div class="row g-3 mt-3">
         <!-- Bar Chart Card -->
         <div class="col-lg-6 col-md-12">
           <div class="card p-3 shadow rounded-lg border-0 fixed-card">
-            <h4 class="text-center mb-3 text-black fw-bold border-bottom pb-2">Supplier Performance</h4>
+            <h4 class="text-center mb-3 text-black fw-bold border-bottom pb-2">Vendors Performance</h4>
             <div class="scrollable-content">
               <canvas id="barChart"></canvas>
             </div>
           </div>
         </div>
-        
+
         <!-- Pie Chart Card -->
         <div class="col-lg-6 col-md-12">
           <div class="card p-3 shadow rounded-lg border-0 fixed-card">
@@ -153,7 +152,7 @@
           maintainAspectRatio: false
         }
       });
-      
+
       const pieCtx = document.getElementById('pieChart').getContext('2d');
       new Chart(pieCtx, {
         type: 'pie',

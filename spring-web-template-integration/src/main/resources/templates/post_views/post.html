@@ -10,15 +10,15 @@
     <header th:replace="~{/fragments/header :: header}"></header>
 
     <div class="container mt-5">
-      <h3 class="text-center">Supplier Quick View</h3>
+      <h3 class="text-center">Vendor Quick View</h3>
 
       <section sec:authorize="isAuthenticated()" class="mt-4">
         <div class="container">
           <div class="card p-4 shadow">
-            <h3 class="text-center">Supplier Details</h3>
+            <h3 class="text-center">Vendor Details</h3>
 
             <div class="mb-3">
-              <label class="form-label"><b>Supplier Name:</b></label>
+              <label class="form-label"><b>Vendor Name:</b></label>
               <input
                 type="text"
                 class="form-control"
@@ -40,7 +40,7 @@
                 th:href="@{'/edit_post/' + ${post.id}}"
                 class="btn btn-dark"
                 role="button"
-                >Edit Supplier</a
+                >Edit Vendor</a
               >
             </div>
           </div>
