@@ -11,6 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.mandar.spring_web_template_integration.models.Account;
 import com.mandar.spring_web_template_integration.services.AccountService;
@@ -54,25 +55,61 @@ public class AccountController {
     @GetMapping("/profile")
     @PreAuthorize("isAuthenticated()")
     public String profile(Model model, Principal principal) {
-    
+
         if (principal == null) {
             return "redirect:/login"; // Redirect to login if user is not authenticated
         }
-    
+
         String authUser = principal.getName();
         Optional<Account> optionalAccount = accountService.findOneByEmail(authUser);
-    
+
         if (optionalAccount.isPresent()) {
             Account account = optionalAccount.get();
+
             model.addAttribute("account", account);
             model.addAttribute("photo", account.getPhoto());
         } else {
             model.addAttribute("error", "Account not found.");
             return "error_page"; // Redirect to a custom error page
         }
-    
+
         return "account_views/profile";
     }
-    
+
+    @PostMapping("/profile")
+    @PreAuthorize("isAuthenticated()")
+    public String updateProfile(@Valid @ModelAttribute Account account, BindingResult bindingResult,
+            Principal principal, RedirectAttributes redirectAttributes) {
+
+        if (bindingResult.hasErrors()) {
+            return "account_views/profile";
+        }
+
+        String authUser = "email";
+        if (principal != null) {
+            authUser = principal.getName();
+        }
+
+        Optional<Account> optionalAccount = accountService.findOneByEmail(authUser);
+
+        if (optionalAccount.isPresent()) {
+
+            Account accountById = accountService.findById(account.getId()).get();
+            accountById.setAge(account.getAge());
+            accountById.setDateOfBirth(account.getDateOfBirth());
+            accountById.setFirstname(account.getFirstname());
+            accountById.setLastname(account.getLastname());
+            accountById.setPassword(account.getPassword());
+            accountService.save(accountById);
+
+            redirectAttributes.addFlashAttribute("successMessage", " Profile Updated Successfully");
+
+            return "redirect:/profile";
+
+        } else {
+            return "redirect:/login?error";
+        }
+
+    }
 
 }

@@ -1,5 +1,6 @@
 package com.mandar.spring_web_template_integration.util.constants;
 
+
 public enum Privilege {
     RESET_ANY_USER_PASSWORD(1l, "RESET_ANY_USER_PASSWORD"),
     ACCESS_ADMIN_PANEL(2l, "ACCESS_ADMIN_PANEL");
@@ -19,5 +20,9 @@ public enum Privilege {
     public String getPrivilegeString() {
         return privilegeString;
     }
+
+
+
+
 
 }
