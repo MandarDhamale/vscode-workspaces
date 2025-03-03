@@ -100,6 +100,7 @@ public class AccountController {
             accountById.setFirstname(account.getFirstname());
             accountById.setLastname(account.getLastname());
             accountById.setPassword(account.getPassword());
+            accountById.setGender(account.getGender());
             accountService.save(accountById);
 
             redirectAttributes.addFlashAttribute("successMessage", " Profile Updated Successfully");
