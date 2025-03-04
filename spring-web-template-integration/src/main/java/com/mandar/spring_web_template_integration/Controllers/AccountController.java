@@ -1,20 +1,31 @@
 package com.mandar.spring_web_template_integration.Controllers;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.security.Principal;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.mandar.spring_web_template_integration.models.Account;
 import com.mandar.spring_web_template_integration.services.AccountService;
+import com.mandar.spring_web_template_integration.util.AppUtil;
 
 import jakarta.validation.Valid;
 
@@ -110,6 +121,67 @@ public class AccountController {
         } else {
             return "redirect:/login?error";
         }
+
+    }
+
+    @PostMapping("/upload_photo")
+    @PreAuthorize("isAuthenticated()")
+    public String updatePhoto(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes,
+            Principal principal) {
+
+        if (file.isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "Please upload a file before update");
+            return "redirect:/profile";
+        } else {
+            String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+
+            try {
+
+                int lenght = 10;
+                boolean useLetters = true;
+                boolean userNumbers = true;
+                String generatedString = RandomStringUtils.random(lenght, useLetters, userNumbers);
+                String finalPhotoName = generatedString + fileName;
+                String absoluteFileLocation = AppUtil.getUploadPath(finalPhotoName);
+
+                Path path = Paths.get(absoluteFileLocation);
+
+                Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+
+                String authUser = "email";
+                if (principal != null) {
+                    authUser = principal.getName();
+                }
+
+                Optional<Account> optionalAccount = accountService.findOneByEmail(authUser);
+                if (optionalAccount.isPresent()) {
+                    Account account = optionalAccount.get();
+                    Account accountById = accountService.findById(account.getId()).get();
+                    String relativeFileLocation = "/uploads/" + finalPhotoName;
+                    accountById.setPhoto(relativeFileLocation);
+                    accountService.save(accountById);
+                }
+
+                try {
+                    TimeUnit.SECONDS.sleep(1);
+                } catch (Exception e) {
+                    Thread.currentThread().interrupt();
+                }
+
+
+                redirectAttributes.addFlashAttribute("photoSuccessMessage", " Photo Updated Successfully");
+
+                return "redirect:/profile";
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+
+            }
+
+        }
+
+        return "";
 
     }
 

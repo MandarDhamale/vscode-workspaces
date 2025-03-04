@@ -36,7 +36,7 @@ public class AccountService implements UserDetailsService {
         }
 
         if (account.getPhoto() == null) {
-            String path = "/resources/static/images/default_profile_picture.jpg";
+            String path = "/images/default_profile_picture.jpg";
             account.setPhoto(path);
         }
 
