@@ -11,7 +11,10 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -34,6 +37,9 @@ public class AccountController {
 
     @Autowired
     AccountService accountService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder; 
 
     @GetMapping("/register")
     public String register(Model model) {
@@ -110,7 +116,14 @@ public class AccountController {
             accountById.setDateOfBirth(account.getDateOfBirth());
             accountById.setFirstname(account.getFirstname());
             accountById.setLastname(account.getLastname());
-            accountById.setPassword(account.getPassword());
+            System.out.println(account.getPassword().toString());
+            
+            if (!account.getPassword().isEmpty()) {
+                accountById.setPassword(passwordEncoder.encode(account.getPassword()));
+                System.out.println("Password set again...");
+                System.out.println(account.getPassword());
+            }
+
             accountById.setGender(account.getGender());
             accountService.save(accountById);
 
@@ -168,20 +181,17 @@ public class AccountController {
                     Thread.currentThread().interrupt();
                 }
 
-
                 redirectAttributes.addFlashAttribute("photoSuccessMessage", " Photo Updated Successfully");
 
                 return "redirect:/profile";
 
             } catch (Exception e) {
                 e.printStackTrace();
-            } finally {
-
             }
 
         }
 
-        return "";
+        return "redirect:/profile?error";
 
     }
 

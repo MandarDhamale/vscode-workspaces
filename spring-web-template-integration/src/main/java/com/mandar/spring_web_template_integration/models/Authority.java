@@ -12,7 +12,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Authority {
+public class Authority { 
 
     @Id
     private Long id;
