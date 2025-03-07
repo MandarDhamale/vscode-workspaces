@@ -38,13 +38,19 @@ public class AccountService implements UserDetailsService {
             if (optionalCurrentAccount.isPresent()) {
                 Account currentAccount = optionalCurrentAccount.get();
 
-                if (!account.getPassword().isEmpty()
-                        && !currentAccount.getPassword().equals(account.getPassword())
-                        && !passwordEncoder.matches(account.getPassword(), currentAccount.getPassword())) {
+                // Debugging logs
+                System.out.println("Received password: " + account.getPassword());
+                System.out.println("Stored hashed password: " + currentAccount.getPassword());
+
+                // Only hash if the password is in plain text
+                if (!account.getPassword().isEmpty() && !account.getPassword().startsWith("$2a$")) {
+                    System.out.println("Password changed. Encoding new password.");
                     account.setPassword(passwordEncoder.encode(account.getPassword()));
                 } else {
-                    account.setPassword(currentAccount.getPassword()); // Keep old password if unchanged
+                    System.out.println("Password unchanged. Keeping the old hash.");
+                    account.setPassword(currentAccount.getPassword());
                 }
+
             }
         } else {
             // New account, encode password

@@ -310,3 +310,12 @@ create global temporary table HTE_account(age integer, date_of_birth date, rn_ i
 2025-03-07 22:30:48.867960+05:30 jdbc[43]: exception
 org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "HTE_ACCOUNT" already exists; SQL statement:
 create global temporary table HTE_account(age integer, date_of_birth date, rn_ integer not null, id bigint, email varchar(255), firstname varchar(255), gender varchar(255), lastname varchar(255), password varchar(255), photo varchar(255), role varchar(255), primary key (rn_)) TRANSACTIONAL [42101-232]
+2025-03-08 00:05:01.159797+05:30 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "HTE_ACCOUNT" already exists; SQL statement:
+create global temporary table HTE_account(age integer, date_of_birth date, rn_ integer not null, id bigint, email varchar(255), firstname varchar(255), gender varchar(255), lastname varchar(255), password varchar(255), photo varchar(255), role varchar(255), primary key (rn_)) TRANSACTIONAL [42101-232]
+2025-03-08 00:05:03.390372+05:30 jdbc[23]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "HTE_ACCOUNT" already exists; SQL statement:
+create global temporary table HTE_account(age integer, date_of_birth date, rn_ integer not null, id bigint, email varchar(255), firstname varchar(255), gender varchar(255), lastname varchar(255), password varchar(255), photo varchar(255), role varchar(255), primary key (rn_)) TRANSACTIONAL [42101-232]
+2025-03-08 00:05:20.532401+05:30 jdbc[33]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "HTE_ACCOUNT" already exists; SQL statement:
+create global temporary table HTE_account(age integer, date_of_birth date, rn_ integer not null, id bigint, email varchar(255), firstname varchar(255), gender varchar(255), lastname varchar(255), password varchar(255), photo varchar(255), role varchar(255), primary key (rn_)) TRANSACTIONAL [42101-232]
