@@ -38,7 +38,7 @@ public class SeedData implements CommandLineRunner {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    private static final String DEFAULT_PASSWORD = "pass787";
+    private static final String DEFAULT_PASSWORD = "mrd";
     private static final Random random = new Random();
 
     @Override
@@ -90,7 +90,7 @@ public class SeedData implements CommandLineRunner {
     private Account createAccount(String email, String firstname, String lastname, String role, Set<Authority> authorities) {
         Account account = new Account();
         account.setEmail(email);
-        account.setPassword(passwordEncoder.encode(DEFAULT_PASSWORD));
+        account.setPassword(DEFAULT_PASSWORD);
         account.setFirstname(firstname);
         account.setLastname(lastname);
         account.setRole(role);

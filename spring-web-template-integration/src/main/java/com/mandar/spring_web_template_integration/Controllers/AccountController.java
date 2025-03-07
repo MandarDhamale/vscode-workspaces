@@ -119,7 +119,7 @@ public class AccountController {
             System.out.println(account.getPassword().toString());
             
             if (!account.getPassword().isEmpty()) {
-                accountById.setPassword(passwordEncoder.encode(account.getPassword()));
+                accountById.setPassword(account.getPassword());
                 System.out.println("Password set again...");
                 System.out.println(account.getPassword());
             }

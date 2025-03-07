@@ -36,7 +36,7 @@ public class Account {
     @NotEmpty(message = "Email cannot be empty")
     private String email;
 
-    @NotEmpty(message = "Password cannot be empty")
+    // @NotEmpty(message = "Password cannot be empty")
     private String password;
 
     @NotEmpty(message = "Firstname cannot be empty")

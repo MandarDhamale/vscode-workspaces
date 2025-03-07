@@ -1,5 +1,6 @@
 package com.mandar.spring_web_template_integration.services;
 
+import java.lang.StackWalker.Option;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -30,7 +31,27 @@ public class AccountService implements UserDetailsService {
 
     public Account save(Account account) {
 
-        account.setPassword(passwordEncoder.encode(account.getPassword()));
+        // Check if the ID is null to avoid unnecessary DB queries
+        if (account.getId() != null) {
+            Optional<Account> optionalCurrentAccount = accountRepository.findById(account.getId());
+
+            if (optionalCurrentAccount.isPresent()) {
+                Account currentAccount = optionalCurrentAccount.get();
+
+                if (!account.getPassword().isEmpty()
+                        && !currentAccount.getPassword().equals(account.getPassword())
+                        && !passwordEncoder.matches(account.getPassword(), currentAccount.getPassword())) {
+                    account.setPassword(passwordEncoder.encode(account.getPassword()));
+                } else {
+                    account.setPassword(currentAccount.getPassword()); // Keep old password if unchanged
+                }
+            }
+        } else {
+            // New account, encode password
+            account.setPassword(passwordEncoder.encode(account.getPassword()));
+        }
+
+        // Ensure default values
         if (account.getRole() == null) {
             account.setRole(Roles.USER.getRole());
         }

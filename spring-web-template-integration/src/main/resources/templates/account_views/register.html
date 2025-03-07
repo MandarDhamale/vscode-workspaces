@@ -14,7 +14,7 @@
                 <div class="col-md-6">
                     <label for="email" class="form-label">Email</label>
                     <div class="input-container">
-                        <input id="email" th:field="*{email}" class="form-control" placeholder="Enter your email" />
+                        <input id="email" th:field="*{email}" class="form-control" placeholder="Enter your email" required/>
                         <i class="fas fa-envelope"></i>
                     </div>
                     <div th:if="${#fields.hasErrors('email')}" class="text-danger small mt-1">
