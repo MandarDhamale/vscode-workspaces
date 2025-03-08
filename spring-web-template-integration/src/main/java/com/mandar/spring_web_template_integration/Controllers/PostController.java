@@ -107,6 +107,7 @@ public class PostController {
         }
 
         System.out.println(post.getId());
+        post.setStatus("Active");
         postService.save(post);
         System.out.println(post.getId());
         return "redirect:/edit_post/" + post.getId();

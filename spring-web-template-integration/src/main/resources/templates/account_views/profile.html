@@ -61,7 +61,7 @@
                 id="file"
                 onchange="previewImage(event)"
               />
-              <button type="submit" class="btn btn-dark">Update</button>
+              <button type="submit" class="btn btn-dark btn-secondary">Update</button>
             </div>
             <p
               th:text="${error}"
@@ -81,14 +81,26 @@
           <input type="hidden" id="id" name="id" th:field="*{id}" />
 
           <h2 class="text-center my-4">
-            Hello, <span th:text="${account.firstname}"></span>
-            <h6 class="text-center" th:switch="${account.role}">
-              ROLE: <span th:case="'ROLE_ADMIN'">ADMIN</span>
-              <span th:case="'ROLE_EDITOR'">EDITOR</span>
-              <span th:case="'ROLE_USER'">USER</span>
-              <span th:case="*">UNKNOWN</span>
-              <!-- Default case if no match -->
+            <span class="fw-bold text-gradient">
+              <i class="fa-solid fa-hand-wave me-1"></i> 
+              Hello, <span th:text="${account.firstname}"></span>
+            </span>
+            <h6 class="text-center mt-2" th:switch="${account.role}">
+              <span class="badge text-uppercase shadow-sm py-2 px-3 fw-bold"
+                th:classappend="
+                  ${account.role == 'ROLE_ADMIN' ? 'bg-danger text-light' : 
+                  account.role == 'ROLE_EDITOR' ? 'bg-primary text-light' : 
+                  account.role == 'ROLE_USER' ? 'bg-success text-light' : 
+                  'bg-secondary text-light'}">
+                <i th:classappend="
+                  ${account.role == 'ROLE_ADMIN' ? 'fa-solid fa-user-shield' :
+                  account.role == 'ROLE_EDITOR' ? 'fa-solid fa-pen' :
+                  account.role == 'ROLE_USER' ? 'fa-solid fa-user' :
+                  'fa-solid fa-question'}" class="me-1"></i>
+                <span th:text="${account.role.replace('ROLE_', '')}"></span>
+              </span>
             </h6>
+            
           </h2>
 
           <!-- First Row: Email & Password -->

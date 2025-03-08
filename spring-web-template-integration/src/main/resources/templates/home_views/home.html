@@ -46,21 +46,45 @@
               <table class="table table-hover table-sm">
                 <thead class="table-dark">
                   <tr>
+                    <th></th>
+                    <th>Vendor ID</th>
                     <th>Vendor Name</th>
-                    <th>Creator</th>
                     <th>Status</th>
-                    <th>Description</th>
+                    <th>SAP ID</th>
+                    <th>Country</th>
                   </tr>
                 </thead>
-                <tbody>
-                  <tr th:each="post : ${posts}">
-                    <td><a th:href="@{'/post/' + ${post.id}}" th:text="${post.title}">Title</a></td>
-                    <td th:text="${post.account.firstname}"></td>
-                    <td th:text="${post.status}"></td>
-                    <td th:utext="${post.body}"></td>
+                
+                <tbody class="bg-light text-xs">
+                  <tr th:each="post : ${posts}" class="border rounded-3">
+                    <td class="px-2 py-1">
+                      <!-- Edit Icon -->
+                      <a th:href="@{'/edit_post/' + ${post.id}}" class="text-decoration-none text-primary me-1">
+                        <i class="fa-solid fa-pencil small"
+                           style="color: #bebebe; transition: color 0.1s ease"
+                           onmouseover="this.style.color='darkblue'"
+                           onmouseout="this.style.color='#bebebe'">
+                        </i>
+                      </a>
+                    </td>
+                    <td class="px-2 py-1" th:text="${post.id}"></td>
+                    <td class="px-2 py-1 text-truncate" style="max-width: 120px;">
+                      <i class="fa-solid fa-magnifying-glass small" style="color: #bebebe"></i>
+                      <a th:href="@{'/post/' + ${post.id}}" th:text="${post.title}" class="fw-bold text-decoration-none">
+                        Title
+                      </a>
+                    </td>
+                    <td class="px-2 py-1">
+                      <span th:text="${post.status}"
+                            th:classappend="${post.status == 'Active' ? 'bg-success text-white rounded-pill px-1 py-0 small' :
+                                             (post.status == 'Inactive' ? 'bg-danger text-white rounded-pill px-1 py-0 small' : '')}">
+                      </span>
+                    </td>
+                    <td class="px-2 py-1" th:text="${post.sapId}"></td>
+                    <td class="px-2 py-1" th:text="${post.country}"></td>
                   </tr>
                 </tbody>
-              </table>
+              </table>              
             </div>
           </div>
         </div>

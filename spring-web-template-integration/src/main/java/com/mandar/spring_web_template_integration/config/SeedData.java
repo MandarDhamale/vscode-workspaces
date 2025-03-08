@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -62,16 +63,18 @@ public class SeedData implements CommandLineRunner {
         authorityService.findById(Privilege.ACCESS_ADMIN_PANEL.getId()).ifPresent(adminPanelAuthority::add);
 
         // Initialize accounts
-        Account account01 = createAccount("admin@iprocure.com", "admin", "admin", Roles.ADMIN.getRole(), adminPanelAuthority);
-        Account account02 = createAccount("editor@iprocure.com", "editor", "editor", Roles.EDITOR.getRole(), new HashSet<>());
+        Account account01 = createAccount("admin@iprocure.com", "admin", "admin", Roles.ADMIN.getRole(),
+                adminPanelAuthority);
+        Account account02 = createAccount("editor@iprocure.com", "editor", "editor", Roles.EDITOR.getRole(),
+                new HashSet<>());
         Account account03 = createAccount("user@iprocure.com", "user", "user", null, new HashSet<>());
-        Account account04 = createAccount("super_editor@iprocure.com", "super_editor", "super_editor", Roles.EDITOR.getRole(), allAuthorities);
+        Account account04 = createAccount("super_editor@iprocure.com", "super_editor", "super_editor",
+                Roles.EDITOR.getRole(), allAuthorities);
 
         account01.setPassword(DEFAULT_PASSWORD);
         account02.setPassword(DEFAULT_PASSWORD);
         account03.setPassword(DEFAULT_PASSWORD);
         account04.setPassword(DEFAULT_PASSWORD);
-
 
         accountService.save(account01);
         accountService.save(account02);
@@ -87,7 +90,8 @@ public class SeedData implements CommandLineRunner {
         log.info("Seed data initialization completed.");
     }
 
-    private Account createAccount(String email, String firstname, String lastname, String role, Set<Authority> authorities) {
+    private Account createAccount(String email, String firstname, String lastname, String role,
+            Set<Authority> authorities) {
         Account account = new Account();
         account.setEmail(email);
         account.setPassword(DEFAULT_PASSWORD);
@@ -99,33 +103,57 @@ public class SeedData implements CommandLineRunner {
     }
 
     private void createAndSavePosts(Account adminAccount, Account editorAccount, Account userAccount) {
-        Post post01 = createPost("Rockwell Automation", "Supplier of industrial automation and information technology", adminAccount, "United States");
-        Post post02 = createPost("Oracle", "Supplier of database software and cloud engineered systems", editorAccount, "United States");
-        Post post03 = createPost("Qualcomm", "Supplier of mobile processors and wireless technology", userAccount, "United States");
-        Post post04 = createPost("HP Inc.", "Supplier of computers, laptops, and printers", editorAccount, "United States");
-        Post post05 = createPost("Intel", "Supplier of microprocessors and semiconductor products", userAccount, "United States");
-        Post post06 = createPost("AMD", "Supplier of graphics cards, processors, and semiconductor products", adminAccount, "United States");
-        Post post07 = createPost("NVIDIA", "Supplier of GPUs, AI solutions, and cloud computing hardware", editorAccount, "United States");
-        Post post08 = createPost("Cisco Systems", "Supplier of networking hardware and telecommunications equipment", adminAccount, "United States");
-        Post post09 = createPost("Samsung Electronics", "Supplier of semiconductors, display panels, and electronic components", editorAccount, "South Korea");
+        Post post01 = createPost("Rockwell Automation", "Supplier of industrial automation and information technology",
+                adminAccount, "United States");
+        Post post02 = createPost("Oracle", "Supplier of database software and cloud engineered systems", editorAccount,
+                "United States");
+        Post post03 = createPost("Qualcomm", "Supplier of mobile processors and wireless technology", userAccount,
+                "United States");
+        Post post04 = createPost("HP Inc.", "Supplier of computers, laptops, and printers", editorAccount,
+                "United States");
+        Post post05 = createPost("Intel", "Supplier of microprocessors and semiconductor products", userAccount,
+                "United States");
+        Post post06 = createPost("AMD", "Supplier of graphics cards, processors, and semiconductor products",
+                adminAccount, "United States");
+        Post post07 = createPost("NVIDIA", "Supplier of GPUs, AI solutions, and cloud computing hardware",
+                editorAccount, "United States");
+        Post post08 = createPost("Cisco Systems", "Supplier of networking hardware and telecommunications equipment",
+                adminAccount, "United States");
+        Post post09 = createPost("Samsung Electronics",
+                "Supplier of semiconductors, display panels, and electronic components", editorAccount, "South Korea");
         Post post10 = createPost("Sony", "Supplier of consumer electronics and imaging sensors", userAccount, "Japan");
-        Post post11 = createPost("LG Electronics", "Supplier of home appliances, display panels, and electronic components", adminAccount, "South Korea");
-        Post post12 = createPost("Texas Instruments", "Supplier of embedded processors and analog semiconductor products", userAccount, "United States");
-        Post post13 = createPost("Micron Technology", "Supplier of memory and storage solutions", adminAccount, "United States");
-        Post post14 = createPost("Western Digital", "Supplier of hard drives, SSDs, and storage solutions", editorAccount, "United States");
-        Post post15 = createPost("Seagate Technology", "Supplier of hard drives and data storage solutions", userAccount, "United States");
-        Post post16 = createPost("IBM", "Supplier of enterprise solutions, cloud computing, and AI technology", adminAccount, "United States");
-        Post post17 = createPost("Foxconn", "Supplier of electronics manufacturing and assembly services", editorAccount, "Taiwan");
-        Post post18 = createPost("Panasonic", "Supplier of consumer electronics and industrial solutions", userAccount, "Japan");
-        Post post19 = createPost("Toshiba", "Supplier of energy systems, storage devices, and industrial solutions", adminAccount, "Japan");
-        Post post20 = createPost("Sharp Corporation", "Supplier of display technology and electronic components", editorAccount, "Japan");
+        Post post11 = createPost("LG Electronics",
+                "Supplier of home appliances, display panels, and electronic components", adminAccount, "South Korea");
+        Post post12 = createPost("Texas Instruments",
+                "Supplier of embedded processors and analog semiconductor products", userAccount, "United States");
+        Post post13 = createPost("Micron Technology", "Supplier of memory and storage solutions", adminAccount,
+                "United States");
+        Post post14 = createPost("Western Digital", "Supplier of hard drives, SSDs, and storage solutions",
+                editorAccount, "United States");
+        Post post15 = createPost("Seagate Technology", "Supplier of hard drives and data storage solutions",
+                userAccount, "United States");
+        Post post16 = createPost("IBM", "Supplier of enterprise solutions, cloud computing, and AI technology",
+                adminAccount, "United States");
+        Post post17 = createPost("Foxconn", "Supplier of electronics manufacturing and assembly services",
+                editorAccount, "Taiwan");
+        Post post18 = createPost("Panasonic", "Supplier of consumer electronics and industrial solutions", userAccount,
+                "Japan");
+        Post post19 = createPost("Toshiba", "Supplier of energy systems, storage devices, and industrial solutions",
+                adminAccount, "Japan");
+        Post post20 = createPost("Sharp Corporation", "Supplier of display technology and electronic components",
+                editorAccount, "Japan");
         Post post21 = createPost("Lenovo", "Supplier of computers, tablets, and IT solutions", userAccount, "China");
         Post post22 = createPost("BOE Technology", "Supplier of LCD and OLED display panels", adminAccount, "China");
-        Post post23 = createPost("ASUS", "Supplier of laptops, motherboards, and gaming peripherals", editorAccount, "Taiwan");
-        Post post24 = createPost("MSI", "Supplier of gaming laptops, motherboards, and graphics cards", userAccount, "Taiwan");
-        Post post25 = createPost("Dell EMC", "Supplier of enterprise storage and cloud solutions", adminAccount, "United States");
-        Post post26 = createPost("Epson", "Supplier of printers, scanners, and imaging solutions", editorAccount, "Japan");
-        Post post27 = createPost("Canon", "Supplier of imaging, optical products, and office solutions", userAccount, "Japan");
+        Post post23 = createPost("ASUS", "Supplier of laptops, motherboards, and gaming peripherals", editorAccount,
+                "Taiwan");
+        Post post24 = createPost("MSI", "Supplier of gaming laptops, motherboards, and graphics cards", userAccount,
+                "Taiwan");
+        Post post25 = createPost("Dell EMC", "Supplier of enterprise storage and cloud solutions", adminAccount,
+                "United States");
+        Post post26 = createPost("Epson", "Supplier of printers, scanners, and imaging solutions", editorAccount,
+                "Japan");
+        Post post27 = createPost("Canon", "Supplier of imaging, optical products, and office solutions", userAccount,
+                "Japan");
 
         // Save all posts
         postService.save(post01);
@@ -164,6 +192,11 @@ public class SeedData implements CommandLineRunner {
         post.setAccount(account);
         post.setCountry(country);
         post.setSapId(generateRandomSapId());
+
+        // Randomly assign 'Active' or 'Inactive'
+        String status = ThreadLocalRandom.current().nextBoolean() ? "Active" : "Inactive";
+        post.setStatus(status);
+
         return post;
     }
 
