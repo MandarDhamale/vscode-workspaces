@@ -55,6 +55,9 @@ public class WebSecurityConfig {
                         .failureUrl("/login?error")
                         .usernameParameter("email")
                         .passwordParameter("password"))
+                .rememberMe(rememberMe -> rememberMe.key("unique-and-secret")
+                .tokenValiditySeconds(14*24*60*60)
+                .rememberMeParameter("rememberMe"))
                 .logout(logout -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                         .logoutSuccessUrl("/login?logout")

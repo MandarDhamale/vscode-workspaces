@@ -32,8 +32,8 @@ public class PostService {
         if (post.getId() == null) {
             post.setCreatedAt(LocalDateTime.now());
             post.setStatus("Active");
-            post.setCountry("India");
-            post.setSapId("1234");
+            // post.setCountry("India");
+            // post.setSapId("1234");
         }
         post.setUpdatedAt(LocalDateTime.now());
         return postRepository.save(post);

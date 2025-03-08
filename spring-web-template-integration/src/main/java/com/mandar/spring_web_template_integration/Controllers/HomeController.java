@@ -18,7 +18,7 @@ public class HomeController {
 
     @GetMapping("/")
     public String defaultMapping() {
-        return "home_views/home";
+        return "redirect:/login";
     }
 
     @GetMapping("/home")
