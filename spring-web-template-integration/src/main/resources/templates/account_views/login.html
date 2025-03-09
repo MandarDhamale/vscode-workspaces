@@ -9,6 +9,16 @@
       <form class="login-form" th:action="@{/login}" method="post">
         <h2><strong>User Login</strong></h2>
 
+        <!-- Compact Success Token Sent Email Message -->
+        <div
+          th:if="${message ne null}"
+          class="alert alert-success py-1 px-3 small shadow-sm rounded-2"
+          role="alert"
+        >
+          <i class="fa-solid fa-circle-check me-1"></i>
+          <span th:text="${message}"></span>
+        </div>
+
         <div class="form-group">
           <label for="email">Email</label>
           <div class="input-container">

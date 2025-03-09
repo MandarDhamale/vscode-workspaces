@@ -1,6 +1,7 @@
 package com.mandar.spring_web_template_integration.models;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -44,6 +45,11 @@ public class Account {
 
     @NotEmpty(message = "Lastname cannot be empty")
     private String lastname;
+
+    private String passwordResetToken;
+
+    private LocalDateTime passwordResetTokenExpiry;
+
 
     private String gender;
 

@@ -5,12 +5,15 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,6 +38,8 @@ public class AccountController {
     @Autowired
     AccountService accountService;
 
+    @Value("${password.token.reset.timeout.minutes}")
+    private int passwordTokenTimeout;
 
     @GetMapping("/register")
     public String register(Model model) {
@@ -112,7 +117,7 @@ public class AccountController {
             accountById.setFirstname(account.getFirstname());
             accountById.setLastname(account.getLastname());
             System.out.println(account.getPassword().toString());
-            
+
             if (!account.getPassword().isEmpty()) {
                 accountById.setPassword(account.getPassword());
                 System.out.println("Password set again...");
@@ -193,23 +198,32 @@ public class AccountController {
 
     @GetMapping("/forgot-password")
     public String forgotPassword(Model model) {
-    
 
-
-    
         return "account_views/forgot_password";
 
     }
 
     @PostMapping("/reset-password")
-    public String resetPassword(@RequestParam("email") String email, RedirectAttributes redirectAttributes) {
-        // Add logic to handle password reset, such as sending an email.
-        
-        // For now, let's assume an email is sent successfully.
-        redirectAttributes.addFlashAttribute("message", "Password reset link has been sent to your email.");
-        
-        return "redirect:/login"; // Redirects back to login after success
-    }
+    public String resetPassword(@RequestParam("email") String _email, RedirectAttributes redirectAttributes,
+            Model model) {
 
+        Optional<Account> optionalAccount = accountService.findOneByEmail(_email);
+
+        if (optionalAccount.isPresent()) {
+            Account account = accountService.findById(optionalAccount.get().getId()).get();
+            String resetToken = UUID.randomUUID().toString();
+            account.setPasswordResetToken(resetToken);
+            account.setPasswordResetTokenExpiry(LocalDateTime.now().plusMinutes(passwordTokenTimeout));
+            accountService.save(account);
+            redirectAttributes.addFlashAttribute("message", "Password reset link has been sent to your email");
+            return "redirect:/login";
+        } else {
+
+            redirectAttributes.addFlashAttribute("error", "No user found with the given email");
+            return "redirect:/forgot-password?notfound";
+
+        }
+
+    }
 
 }
