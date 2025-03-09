@@ -5,6 +5,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.security.Principal;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -131,6 +132,7 @@ public class AccountController {
 
     }
 
+    @SuppressWarnings("deprecation")
     @PostMapping("/upload_photo")
     @PreAuthorize("isAuthenticated()")
     public String updatePhoto(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes,
@@ -140,7 +142,7 @@ public class AccountController {
             redirectAttributes.addFlashAttribute("error", "Please upload a file before update");
             return "redirect:/profile";
         } else {
-            String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+            String fileName = StringUtils.cleanPath(Objects.requireNonNullElse(file.getOriginalFilename(), ""));
 
             try {
 
@@ -188,5 +190,26 @@ public class AccountController {
         return "redirect:/profile?error";
 
     }
+
+    @GetMapping("/forgot-password")
+    public String forgotPassword(Model model) {
+    
+
+
+    
+        return "account_views/forgot_password";
+
+    }
+
+    @PostMapping("/reset-password")
+    public String resetPassword(@RequestParam("email") String email, RedirectAttributes redirectAttributes) {
+        // Add logic to handle password reset, such as sending an email.
+        
+        // For now, let's assume an email is sent successfully.
+        redirectAttributes.addFlashAttribute("message", "Password reset link has been sent to your email.");
+        
+        return "redirect:/login"; // Redirects back to login after success
+    }
+
 
 }
