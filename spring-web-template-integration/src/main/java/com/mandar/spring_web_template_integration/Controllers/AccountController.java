@@ -1,6 +1,5 @@
 package com.mandar.spring_web_template_integration.Controllers;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -11,10 +10,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -38,8 +34,6 @@ public class AccountController {
     @Autowired
     AccountService accountService;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder; 
 
     @GetMapping("/register")
     public String register(Model model) {

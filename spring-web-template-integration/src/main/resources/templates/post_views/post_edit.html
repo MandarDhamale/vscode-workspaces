@@ -77,21 +77,21 @@
               role="tabpanel"
               aria-labelledby="vendor-tab"
             >
-                            <!-- Compact Success Message -->
-                            <div
-                            th:if="${successMessage}"
-                            class="alert alert-success  py-1 px-3 small shadow-sm rounded-2"
-                            role="alert"
-                          >
-                            <i class="fa-solid fa-circle-check me-1"></i>
-                            <span th:text="${successMessage}"></span>
-                            <button
-                              type="button"
-                              class="btn-close btn-sm"
-                              data-bs-dismiss="alert"
-                              aria-label="Close"
-                            ></button>
-                          </div>
+              <!-- Compact Success Message -->
+              <div
+                th:if="${successMessage}"
+                class="alert alert-success py-1 px-3 small shadow-sm rounded-2"
+                role="alert"
+              >
+                <i class="fa-solid fa-circle-check me-1"></i>
+                <span th:text="${successMessage}"></span>
+                <button
+                  type="button"
+                  class="btn-close btn-sm"
+                  data-bs-dismiss="alert"
+                  aria-label="Close"
+                ></button>
+              </div>
               <h4>Vendor Information</h4>
               <form
                 th:action="@{'/post/edit/{id}' (id=${post.id })}"
@@ -106,12 +106,16 @@
                   th:field="*{account}"
                 />
 
-
-
                 <div class="d-flex justify-content-center mb-3">
-                  <button type="submit" class="btn btn-success ms-2">Activate Vendor</button>
-                  <button type="submit" class="btn btn-warning ms-2">De-activate Vendor</button>
-                  <button type="submit" class="btn btn-primary ms-2">Save</button>
+                  <button type="submit" class="btn btn-success ms-2">
+                    Activate Vendor
+                  </button>
+                  <button type="submit" class="btn btn-warning ms-2">
+                    De-activate Vendor
+                  </button>
+                  <button type="submit" class="btn btn-primary ms-2">
+                    Save
+                  </button>
                   <button
                     type="submit"
                     class="btn btn-secondary ms-2"
@@ -197,7 +201,7 @@
                     </div>
                     <div class="mb-1">
                       <label class="form-label">Created at: </label>
-                      <span th:text="${post.createdAt}"></span>
+                      <span th:text="${post.createdAt}"></span> by <span th:text="${post.account.firstname}"></span>
                     </div>
                     <div class="mb-1">
                       <label class="form-label">Last modified at:</label>

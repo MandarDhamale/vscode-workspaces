@@ -85,21 +85,27 @@
               <i class="fa-solid fa-hand-wave me-1"></i> 
               Hello, <span th:text="${account.firstname}"></span>
             </span>
-            <h6 class="text-center mt-2" th:switch="${account.role}">
+            <h6 class="text-center mt-2">
               <span class="badge text-uppercase shadow-sm py-2 px-3 fw-bold"
-                th:classappend="
-                  ${account.role == 'ROLE_ADMIN' ? 'bg-danger text-light' : 
-                  account.role == 'ROLE_EDITOR' ? 'bg-primary text-light' : 
-                  account.role == 'ROLE_USER' ? 'bg-success text-light' : 
-                  'bg-secondary text-light'}">
-                <i th:classappend="
-                  ${account.role == 'ROLE_ADMIN' ? 'fa-solid fa-user-shield' :
-                  account.role == 'ROLE_EDITOR' ? 'fa-solid fa-pen' :
-                  account.role == 'ROLE_USER' ? 'fa-solid fa-user' :
-                  'fa-solid fa-question'}" class="me-1"></i>
-                <span th:text="${account.role.replace('ROLE_', '')}"></span>
+                th:classappend=" 'bg-danger text-light' "
+                th:style="${account.role == 'ROLE_ADMIN' ? 'opacity: 1;' : 'opacity: 0.25;'}">
+                <i class="fa-solid fa-user-shield me-1"></i> Admin
+              </span>
+            
+              <span class="badge text-uppercase shadow-sm py-2 px-3 fw-bold"
+                th:classappend=" 'bg-primary text-light' "
+                th:style="${account.role == 'ROLE_EDITOR' ? 'opacity: 1;' : 'opacity: 0.25;'}">
+                <i class="fa-solid fa-pen me-1"></i> Editor
+              </span>
+            
+              <span class="badge text-uppercase shadow-sm py-2 px-3 fw-bold"
+                th:classappend=" 'bg-success text-light' "
+                th:style="${account.role == 'ROLE_USER' ? 'opacity: 1;' : 'opacity: 0.25;'}">
+                <i class="fa-solid fa-user me-1"></i> User
               </span>
             </h6>
+            
+            
             
           </h2>
 
