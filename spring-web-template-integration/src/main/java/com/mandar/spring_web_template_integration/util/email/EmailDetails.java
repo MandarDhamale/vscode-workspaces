@@ -1,9 +1,13 @@
 package com.mandar.spring_web_template_integration.util.email;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-public class emailDetails {
+@NoArgsConstructor
+@AllArgsConstructor
+public class EmailDetails {
 
     private String recipient;
     private String msgBody;

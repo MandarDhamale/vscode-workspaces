@@ -28,7 +28,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.mandar.spring_web_template_integration.models.Account;
 import com.mandar.spring_web_template_integration.services.AccountService;
+import com.mandar.spring_web_template_integration.services.EmailService;
 import com.mandar.spring_web_template_integration.util.AppUtil;
+import com.mandar.spring_web_template_integration.util.email.EmailDetails;
 
 import jakarta.validation.Valid;
 
@@ -37,6 +39,9 @@ public class AccountController {
 
     @Autowired
     AccountService accountService;
+
+    @Autowired
+    private EmailService emailService;
 
     @Value("${password.token.reset.timeout.minutes}")
     private int passwordTokenTimeout;
@@ -215,8 +220,18 @@ public class AccountController {
             account.setPasswordResetToken(resetToken);
             account.setPasswordResetTokenExpiry(LocalDateTime.now().plusMinutes(passwordTokenTimeout));
             accountService.save(account);
+
+            String resetMessage = "This is the reset password link http://localhost/reset-password?token=" + resetToken;
+            EmailDetails emailDetails = new EmailDetails(account.getEmail(), resetMessage, "iProcure - Reset Password");
+
+            if (emailService.sendSimpleEmail(emailDetails) == false) {
+                redirectAttributes.addFlashAttribute("error", "Error while sending email");
+                return "redirect:/forgot-password?emailSendError";
+            }
+
             redirectAttributes.addFlashAttribute("message", "Password reset link has been sent to your email");
             return "redirect:/login";
+
         } else {
 
             redirectAttributes.addFlashAttribute("error", "No user found with the given email");

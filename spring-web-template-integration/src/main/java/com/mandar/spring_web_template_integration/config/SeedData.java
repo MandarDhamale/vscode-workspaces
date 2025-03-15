@@ -59,7 +59,7 @@ public class SeedData implements CommandLineRunner {
         authorityService.findById(Privilege.ACCESS_ADMIN_PANEL.getId()).ifPresent(adminPanelAuthority::add);
 
         // Initialize accounts
-        Account account01 = createAccount("admin@iprocure.com", "admin", "admin", Roles.ADMIN.getRole(),
+        Account account01 = createAccount("mandardhamale@gmail.com", "Mandar", "Dhamale", Roles.ADMIN.getRole(),
                 adminPanelAuthority);
         Account account02 = createAccount("editor@iprocure.com", "editor", "editor", Roles.EDITOR.getRole(),
                 new HashSet<>());
