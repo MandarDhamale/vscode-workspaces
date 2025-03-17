@@ -36,21 +36,19 @@ public class AppConfig {
 
     @Bean
     public JavaMailSender getJavaMailSender() {
-
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-
         mailSender.setHost(springMailHost);
         mailSender.setPort(springMailPort);
+
         mailSender.setUsername(springMailUsername);
         mailSender.setPassword(springMailPassword);
 
-        Properties properties = mailSender.getJavaMailProperties();
-        properties.put("mail.transport.protocol", mailTransportProtocol);
-        properties.put("mail.smtp.auth", mailSmtpAuth);
-        properties.put("mail.smtp.starttls.enable", starttlsEnable);
-        properties.put("mail.debug", "true");
-        properties.put("mail.smtp.ssl.trust", smtpSslTrust);
+        Properties props = mailSender.getJavaMailProperties();
+        props.put("mail.transport.protocol", "smtp");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
 
         return mailSender;
     }
+
 }
