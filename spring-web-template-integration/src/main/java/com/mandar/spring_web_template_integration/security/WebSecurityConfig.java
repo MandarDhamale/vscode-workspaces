@@ -18,7 +18,7 @@ import com.mandar.spring_web_template_integration.util.constants.Privilege;
 public class WebSecurityConfig {
 
     private static final String[] WHITELIST = {
-            "/", "/login", "/register", "/forgot-password", "/reset-password",
+            "/", "/login", "/register", "/forgot-password", "/reset-password", "/change-password",
             "/db-console/**", "/css/**", "/fonts/**", "/images/**", "/js/**", "/templates/**"
     };
 

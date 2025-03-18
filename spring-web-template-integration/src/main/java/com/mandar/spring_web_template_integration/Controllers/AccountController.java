@@ -46,6 +46,9 @@ public class AccountController {
     @Value("${password.token.reset.timeout.minutes}")
     private int passwordTokenTimeout;
 
+    @Value("${site.domain}")
+    private String siteDomain;
+
     @GetMapping("/register")
     public String register(Model model) {
 
@@ -221,7 +224,8 @@ public class AccountController {
             account.setPasswordResetTokenExpiry(LocalDateTime.now().plusMinutes(passwordTokenTimeout));
             accountService.save(account);
 
-            String resetMessage = "This is the reset password link http://localhost/reset-password?token=" + resetToken;
+            String resetMessage = "This is the reset password link " + siteDomain + "change-password?token="
+                    + resetToken;
             EmailDetails emailDetails = new EmailDetails(account.getEmail(), resetMessage, "iProcure - Reset Password");
 
             if (emailService.sendSimpleEmail(emailDetails) == false) {
@@ -238,6 +242,33 @@ public class AccountController {
             return "redirect:/forgot-password?notfound";
 
         }
+
+    }
+
+    @GetMapping("/change-password")
+    public String changePassword(Model model, @RequestParam("token") String token,
+            RedirectAttributes redirectAttributes) {
+
+        Optional<Account> optionalAccount = accountService.findByToken(token);
+
+        if (optionalAccount.isPresent()) {
+
+            Long accountId = optionalAccount.get().getId();
+
+            LocalDateTime now = LocalDateTime.now();
+
+            if (now.isAfter(optionalAccount.get().getPasswordResetTokenExpiry())) {
+                redirectAttributes.addFlashAttribute("error", "Token Expired");
+                return "redirect:/forgot-password?token-expired";
+            }
+
+            model.addAttribute("account_id", accountId);
+            return "account_views/change_password";
+
+        }
+
+        redirectAttributes.addFlashAttribute("error", "Invalid Token");
+        return "redirect:/forgot-password?invalid-token";
 
     }
 

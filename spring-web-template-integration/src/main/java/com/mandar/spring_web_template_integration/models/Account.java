@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -46,6 +47,7 @@ public class Account {
     @NotEmpty(message = "Lastname cannot be empty")
     private String lastname;
 
+    // @Column(name = "token")
     private String passwordResetToken;
 
     private LocalDateTime passwordResetTokenExpiry;
