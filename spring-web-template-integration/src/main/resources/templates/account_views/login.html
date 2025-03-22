@@ -4,6 +4,12 @@
 
   <body>
     <header th:replace="~{/fragments/header :: header}"></header>
+    <style>
+      body {
+        background: url('https://djcs-prod.s3.amazonaws.com/public/blogs/deloitte/blogs.dir/5/files/2024/01/Generative-AI-Applied-IMAGE.jpg') no-repeat center center fixed;
+        background-size: cover;
+      }
+    </style>
 
     <div class="login-container">
       <form class="login-form" th:action="@{/login}" method="post">
