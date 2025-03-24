@@ -253,7 +253,7 @@ public class AccountController {
 
         if (optionalAccount.isPresent()) {
 
-            Long accountId = optionalAccount.get().getId();
+            Account account = accountService.findById(optionalAccount.get().getId()).get();
 
             LocalDateTime now = LocalDateTime.now();
 
@@ -262,7 +262,7 @@ public class AccountController {
                 return "redirect:/forgot-password?token-expired";
             }
 
-            model.addAttribute("account_id", accountId);
+            model.addAttribute("account", account);
             return "account_views/change_password";
 
         }
