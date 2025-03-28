@@ -246,8 +246,13 @@ public class AccountController {
     }
 
     @GetMapping("/change-password")
-    public String changePassword(Model model, @RequestParam("token") String token,
-            RedirectAttributes redirectAttributes) {
+    public String getchangePasswordPage(Model model, @RequestParam("token") String token, RedirectAttributes redirectAttributes) {
+
+        if(token.equals("")){
+            redirectAttributes.addFlashAttribute("error", "Invalid Token");
+            return "redirect:/forgot-password?invalid-token";
+        }
+
 
         Optional<Account> optionalAccount = accountService.findByToken(token);
 
@@ -271,5 +276,27 @@ public class AccountController {
         return "redirect:/forgot-password?invalid-token";
 
     }
+
+    @PostMapping("/change-password")
+    public String updatePassword(@ModelAttribute Account account, RedirectAttributes redirectAttributes){
+
+        Optional<Account> optionalAccount = accountService.findById(account.getId()); 
+
+        if(optionalAccount.isPresent()){
+            Account accountById = accountService.findById(optionalAccount.get().getId()).get();
+            accountById.setPassword(account.getPassword());
+            accountById.setPasswordResetToken("");
+            accountService.save(accountById);
+
+            redirectAttributes.addFlashAttribute("message", "Password Updated");
+            return "redirect:/login";
+
+        }
+
+        return "redirect:/login?passwordUpdateError";
+
+    }
+
+
 
 }
