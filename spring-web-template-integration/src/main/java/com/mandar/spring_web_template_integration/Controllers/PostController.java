@@ -1,10 +1,14 @@
 package com.mandar.spring_web_template_integration.Controllers;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,7 +32,6 @@ public class PostController {
 
     @Autowired
     AccountService accountService;
-
 
     @GetMapping("/post/{id}")
     public String getPosts(@PathVariable Long id, Model model, Principal principal) {
@@ -59,11 +62,37 @@ public class PostController {
     }
 
     @GetMapping("/post_browse")
-    public String postBrowse(Model model) {
+    public String postBrowse(Model model,
+            @RequestParam(required = false, name = "sortBy", defaultValue = "createdAt") String sortBy,
+            @RequestParam(required = false, name = "perPage", defaultValue = "15") String perPage,
+            @RequestParam(required = false, name = "page", defaultValue = "1") String page) {
 
-        List<Post> posts = postService.getAll();
+        // List<Post> posts = postService.getAll();
+        // model.addAttribute("posts", posts);
 
-        model.addAttribute("posts", posts);
+        Page<Post> postsOnPage = postService.getAll(Integer.parseInt(page) - 1, Integer.parseInt(perPage), sortBy);
+        int totalPages = postsOnPage.getTotalPages();
+        List<Integer> pages = new ArrayList<>();
+
+        if (totalPages > 0) {
+            pages = IntStream.rangeClosed(0, totalPages - 1)
+                    .boxed().collect(Collectors.toList());
+        }
+        List<String> links = new ArrayList<>();
+
+        if (pages != null) {
+            for (int link : pages) {
+                String active = "";
+                if (link == postsOnPage.getNumber()) {
+                    active = "active";
+                }
+                String _temp_link = "/?perPage" + perPage + "&page=" + (link + 1) + "&sortBy=" + sortBy;
+                links.add("<li class=\"page-item  " + active + "\"><a href=\"" + _temp_link + "\" class='page-link'>"
+                        + (link + 1) + "</a></li>");
+            }
+            model.addAttribute("links", links);
+        }
+        model.addAttribute("posts", postsOnPage);
 
         return "post_views/post_browse";
 
