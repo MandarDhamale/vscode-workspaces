@@ -86,7 +86,7 @@ public class PostController {
                 if (link == postsOnPage.getNumber()) {
                     active = "active";
                 }
-                String _temp_link = "/?perPage" + perPage + "&page=" + (link + 1) + "&sortBy=" + sortBy;
+                String _temp_link = "post_browse?perPage=" + perPage + "&page=" + (link + 1) + "&sortBy=" + sortBy;
                 links.add("<li class=\"page-item  " + active + "\"><a href=\"" + _temp_link + "\" class='page-link'>"
                         + (link + 1) + "</a></li>");
             }

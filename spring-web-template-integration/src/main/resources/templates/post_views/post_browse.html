@@ -56,9 +56,7 @@
     <div class="container-fluid px-4 mt-4">
       <section sec:authorize="isAuthenticated()">
         <div class="table-responsive">
-          <table
-            class="table table-hover align-middle shadow-sm rounded overflow-hidden table-sm table-bordered w-100"
-          >
+          <table class="table table-hover align-middle shadow-sm rounded overflow-hidden table-sm table-bordered w-100">
             <thead class="table-dark">
               <tr>
                 <th class="px-3 py-2"></th>
@@ -75,54 +73,22 @@
               <tr th:each="post : ${posts}" class="border rounded-3">
                 <td class="px-3 py-2">
                   <!-- Edit Icon -->
-                  <a
-                    th:href="@{'/edit_post/' + ${post.id}}"
-                    class="text-decoration-none text-primary me-2"
-                  >
-                    <i
-                      class="fa-solid fa-pencil"
-                      style="color: #bebebe; transition: color 0.1s ease"
-                      onmouseover="this.style.color='darkblue'"
-                      onmouseout="this.style.color='#bebebe'"
-                    >
-                    </i>
+                  <a th:href="@{'/edit_post/' + ${post.id}}" class="text-decoration-none text-primary me-2">
+                    <i class="fa-solid fa-pencil" style="color: #bebebe; transition: color 0.1s ease" onmouseover="this.style.color='darkblue'" onmouseout="this.style.color='#bebebe'"></i>
                   </a>
                   <!-- Delete Icon -->
-                  <a
-                    href="#"
-                    th:attr="data-id=${post.id}"
-                    class="text-decoration-none text-danger delete-post"
-                    sec:authorize="hasRole('ROLE_ADMIN')"
-                  >
-                    <i
-                      class="fa-regular fa-trash-can"
-                      style="color: #bebebe; transition: color 0.1s ease"
-                      onmouseover="this.style.color='red'"
-                      onmouseout="this.style.color='#bebebe'"
-                    >
-                    </i>
+                  <a href="#" th:attr="data-id=${post.id}" class="text-decoration-none text-danger delete-post" sec:authorize="hasRole('ROLE_ADMIN')">
+                    <i class="fa-regular fa-trash-can" style="color: #bebebe; transition: color 0.1s ease" onmouseover="this.style.color='red'" onmouseout="this.style.color='#bebebe'"></i>
                   </a>
                 </td>
                 <td class="px-3 py-2" th:text="${post.id}"></td>
                 <td class="px-3 py-2">
-                  <i
-                    class="fa-solid fa-magnifying-glass"
-                    style="color: #bebebe"
-                  ></i>
-                  <a
-                    th:href="@{'/post/' + ${post.id}}"
-                    th:text="${post.title}"
-                    class="fw-bold text-decoration-none"
-                  >
-                    Title
-                  </a>
+                  <i class="fa-solid fa-magnifying-glass" style="color: #bebebe"></i>
+                  <a th:href="@{'/post/' + ${post.id}}" th:text="${post.title}" class="fw-bold text-decoration-none">Title</a>
                 </td>
                 <td class="px-3 py-2">
-                  <span
-                    th:text="${post.status}"
-                    th:classappend="${post.status == 'Active' ? 'bg-success text-white rounded-pill px-2 py-1 small' :
-                                         (post.status == 'Inactive' ? 'bg-danger text-white rounded-pill px-2 py-1 small' : '')}"
-                  >
+                  <span th:text="${post.status}" th:classappend="${post.status == 'Active' ? 'bg-success text-white rounded-pill px-2 py-1 small' :
+                                               (post.status == 'Inactive' ? 'bg-danger text-white rounded-pill px-2 py-1 small' : '')}">
                   </span>
                 </td>
                 <td class="px-3 py-2" th:text="${post.sapId}"></td>
@@ -131,10 +97,32 @@
                 <td class="px-3 py-2" th:utext="${post.body}"></td>
               </tr>
             </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="8">
+                  <nav th:if="${links ne null}" aria-label="Pagination">
+                    <ul class="pagination justify-content-start my-2">
+                      <th:block th:each="link: ${links}">
+                        <li class="page-item">
+                          <th:block th:utext="${link}" class="page-link">link</th:block>
+                        </li>
+                      </th:block>
+                    </ul>
+                  </nav>
+                </td>
+              </tr>
+            </tfoot>
+            
           </table>
         </div>
       </section>
     </div>
+
+
+    
+    
+
+
 
     <footer th:replace="~{/fragments/footer :: footer}"></footer>
 
