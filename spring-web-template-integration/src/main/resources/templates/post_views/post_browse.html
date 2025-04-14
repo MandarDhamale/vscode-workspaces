@@ -107,6 +107,11 @@
                           <th:block th:utext="${link}" class="page-link">link</th:block>
                         </li>
                       </th:block>
+                      <li class="page-item disabled">
+                        <span class="page-link bg-transparent border-0 text-dark fw-semibold">
+                          <span th:text="'Page ' + (${posts.number + 1}) + ' of ' + ${posts.totalPages} + ' — Total: ' + ${posts.totalElements}"></span>
+                        </span>
+                      </li>
                     </ul>
                   </nav>
                 </td>
