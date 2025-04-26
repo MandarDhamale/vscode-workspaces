@@ -1,5 +1,6 @@
 package com.mandar.spring_web_template_integration.repositories;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,5 +14,7 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     Optional<Account> findOneByEmailIgnoreCase(String email);
 
     Optional<Account> findByPasswordResetToken(String passwordResetToken);
+
+    List<Account> findAll();
 
 }

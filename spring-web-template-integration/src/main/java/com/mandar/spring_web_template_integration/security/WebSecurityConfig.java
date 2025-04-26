@@ -34,6 +34,7 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(authz -> {
                     // Explicitly allow H2 Console
                     authz.requestMatchers(new AntPathRequestMatcher("/db-console/**")).permitAll();
+                    authz.requestMatchers(new AntPathRequestMatcher("/api/account/**")).permitAll();
                     authz.requestMatchers(new AntPathRequestMatcher("/profile/**")).authenticated();
                     // authz.requestMatchers(new
                     // AntPathRequestMatcher("/admin/**")).hasRole("ADMIN");
