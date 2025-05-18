@@ -1,4 +1,4 @@
-package com.mandar.SpringSecurity.controller;
+package com.mandar.SpringSecurity.controllers;
 
 import java.util.ArrayList;
 import java.util.List;
