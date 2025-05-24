@@ -26,7 +26,8 @@ public class SecurityConfig {
 
         httpSecurity.authenticationProvider(authenticationProvider());
         httpSecurity.csrf(customizer -> customizer.disable());
-        httpSecurity.authorizeHttpRequests(request -> request.anyRequest().authenticated());
+        httpSecurity.authorizeHttpRequests(request -> request.requestMatchers("register", "login").permitAll()
+                .anyRequest().authenticated());
         httpSecurity.formLogin(Customizer.withDefaults()); // for enabling form
         httpSecurity.httpBasic(Customizer.withDefaults()); // for postman
 //        httpSecurity.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
