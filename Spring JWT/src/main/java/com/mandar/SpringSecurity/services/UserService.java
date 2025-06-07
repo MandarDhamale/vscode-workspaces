@@ -23,6 +23,9 @@ public class UserService {
     @Autowired
     BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(5);
 
+    @Autowired
+    JWTService jwtService;
+
     public User register(User user){
         user.setPassword(encoder.encode(user.getPassword()));
         return userRepository.save(user);
@@ -35,7 +38,7 @@ public class UserService {
     public String verify(User user) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
         if(authentication.isAuthenticated())
-            return generateToken();
+            return jwtService.generateToken(user.getUsername());
         return "Bad Credentials";
     }
 }
