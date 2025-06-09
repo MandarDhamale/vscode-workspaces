@@ -5,50 +5,41 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Service;
 
-import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
 import java.security.Key;
-import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Value;
+
 @Service
 public class JWTService {
 
-    private String secretKey = null;
+    private final String secretKey;
 
-    public JWTService(){
-        KeyGenerator keyGen = null;
-        try {
-            keyGen = KeyGenerator.getInstance("HmacSHA256");
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
-        SecretKey sk = keyGen.generateKey();
-        secretKey = Base64.getEncoder().encodeToString(sk.getEncoded());
+    public JWTService(@Value("${jwt.secret}") String secretKey) {
+        this.secretKey = secretKey;
+        System.out.println("JWT Secret Key (Base64): " + secretKey);
     }
 
-
-    public String generateToken(String username){
-
+    public String generateToken(String username) {
         Map<String, Object> claims = new HashMap<>();
+        claims.put("role", "USER");
+
+        long nowMillis = System.currentTimeMillis();
+        long expMillis = nowMillis + 100 * 60 * 60 * 1000;
 
         return Jwts.builder()
-                .claims()
-                .add(claims)
-                .subject(username)
-                .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + 100 * 60 * 60))
-                .and()
+                .setClaims(claims)
+                .setSubject(username)
+                .setIssuedAt(new Date(nowMillis))
+                .setExpiration(new Date(expMillis))
                 .signWith(getKey())
                 .compact();
     }
 
     private Key getKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
-        System.out.println("Secret Key: " + secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 }
