@@ -16,5 +16,10 @@ public class AccountController {
         return "Test API";
     }
 
+    @GetMapping("/test2")
+    public String test2(){
+        return "Test2 API";
+    }
+
     
 }
