@@ -1,15 +1,21 @@
 package com.mandar.SpringRestApi.security;
 
+import com.nimbusds.jose.jwk.JWK;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
+import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -30,6 +36,7 @@ public class SecurityConfig {
                 this.rsaKeys = rsaKeys;
         }
 
+        @Bean
         public InMemoryUserDetailsManager users() {
                 return new InMemoryUserDetailsManager(
                                 User.withUsername("mrd")
@@ -37,6 +44,14 @@ public class SecurityConfig {
                                                 .authorities("read")
                                                 .build());
         }
+
+        @Bean
+        public AuthenticationManager authenticationManager(UserDetailsService userDetailsService){
+                var authProvider = new DaoAuthenticationProvider();
+                authProvider.setUserDetailsService(userDetailsService);
+                return new ProviderManager(authProvider);
+        }
+
 
         @Bean
         JwtDecoder jwtDecoder() {
@@ -64,6 +79,9 @@ public class SecurityConfig {
                                                                                                         // session
                                 )
                                 .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt); // Enable JWT
+                                // TODO: remove these after upgrading the DB from H2 infile to SQL or any other DB
+                                http.csrf().disable();
+                                http.headers().frameOptions().disable();
 
                 return http.build();
 
