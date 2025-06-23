@@ -1,5 +1,6 @@
 package com.mandar.SpringRestApi.security;
 
+import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.jwk.JWK;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,9 +32,18 @@ import com.nimbusds.jose.proc.SecurityContext;
 public class SecurityConfig {
 
         private final RSAKeyProperties rsaKeys;
+        private RSAKey rsaKey;
+
 
         public SecurityConfig(RSAKeyProperties rsaKeys) {
                 this.rsaKeys = rsaKeys;
+        }
+
+        @Bean
+        public JWKSource<SecurityContext> jwkSource(){
+             rsaKey = Jwks.generateRsa();
+             JWKSet jwkSet = new JWKSet(rsaKey);
+             return (jwkSelector, context) -> jwkSelector.select(jwkSet);
         }
 
         @Bean
@@ -52,17 +62,14 @@ public class SecurityConfig {
                 return new ProviderManager(authProvider);
         }
 
-
         @Bean
-        JwtDecoder jwtDecoder() {
-                return NimbusJwtDecoder.withPublicKey(rsaKeys.publicKey()).build();
+        JwtEncoder jwtEncoder(JWKSource<SecurityContext> jwks){
+                return new NimbusJwtEncoder(jwks);
         }
 
         @Bean
-        JwtEncoder jwtEncoder(){
-                JWK jwk = new RSAKey.Builder(rsaKeys.publicKey()).privateKey(rsaKeys.privateKey()).build();
-                JWKSource<SecurityContext> jwks = new ImmutableJWKSet<>(new JWKSet(jwk));
-                return new NimbusJwtEncoder(jwks);
+        JwtDecoder jwtDecoder() throws JOSEException {
+                return NimbusJwtDecoder.withPublicKey(rsaKey.toRSAPublicKey()).build();
         }
 
         @Bean
