@@ -46,14 +46,14 @@ public class SecurityConfig {
              return (jwkSelector, context) -> jwkSelector.select(jwkSet);
         }
 
-        @Bean
-        public InMemoryUserDetailsManager users() {
-                return new InMemoryUserDetailsManager(
-                                User.withUsername("mrd")
-                                                .password("{noop}mrd")
-                                                .authorities("read")
-                                                .build());
-        }
+//        @Bean
+//        public InMemoryUserDetailsManager users() {
+//                return new InMemoryUserDetailsManager(
+//                                User.withUsername("mrd")
+//                                                .password("{noop}mrd")
+//                                                .authorities("read")
+//                                                .build());
+//        }
 
         @Bean
         public AuthenticationManager authenticationManager(UserDetailsService userDetailsService){
