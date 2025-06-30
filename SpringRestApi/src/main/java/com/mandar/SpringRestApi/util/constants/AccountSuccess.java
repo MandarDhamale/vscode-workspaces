@@ -1,4 +1,5 @@
 package com.mandar.SpringRestApi.util.constants;
 
-public class AccountSuccess {
+public enum AccountSuccess {
+
 }
