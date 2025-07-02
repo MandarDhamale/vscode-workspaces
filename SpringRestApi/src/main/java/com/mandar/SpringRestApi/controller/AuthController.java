@@ -1,11 +1,16 @@
 package com.mandar.SpringRestApi.controller;
 
+import com.mandar.SpringRestApi.model.Account;
+import com.mandar.SpringRestApi.payload.auth.AccountDTO;
 import com.mandar.SpringRestApi.payload.auth.TokenDTO;
 import com.mandar.SpringRestApi.payload.auth.UserLoginDTO;
+import com.mandar.SpringRestApi.service.AccountService;
 import com.mandar.SpringRestApi.service.TokenService;
 import com.mandar.SpringRestApi.util.constants.AccountError;
+import com.mandar.SpringRestApi.util.constants.AccountSuccess;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,14 +20,17 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
-@Tag(name = "Auth Controller", description =  "Controller for account management")
+@Tag(name = "Auth Controller", description = "Controller for account management")
 @Slf4j
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;
     private final TokenService tokenService;
 
-    public AuthController(TokenService tokenService, AuthenticationManager authenticationManager){
+    @Autowired
+    private AccountService accountService;
+
+    public AuthController(TokenService tokenService, AuthenticationManager authenticationManager) {
         this.tokenService = tokenService;
         this.authenticationManager = authenticationManager;
     }
@@ -30,19 +38,39 @@ public class AuthController {
 
     @PostMapping("/token")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<TokenDTO> token(@RequestBody UserLoginDTO userLoginDTO){
+    public ResponseEntity<TokenDTO> token(@RequestBody UserLoginDTO userLoginDTO) {
 
-        log.info("Login attempt for email: {}", userLoginDTO.email());
+        log.info("Login attempt for email: {}", userLoginDTO.getEmail());
 
-        try{
+        try {
             Authentication authentication = authenticationManager
-                    .authenticate(new UsernamePasswordAuthenticationToken(userLoginDTO.email(), userLoginDTO.password()));
+                    .authenticate(new UsernamePasswordAuthenticationToken(userLoginDTO.getEmail(), userLoginDTO.getPassword()));
             return ResponseEntity.ok(new TokenDTO(tokenService.generateToken(authentication)));
-        } catch (Exception e){
+        } catch (Exception e) {
             log.debug(AccountError.TOKEN_GENERATION_ERROR.toString() + " " + e.getMessage());
             return new ResponseEntity<>(new TokenDTO(null), HttpStatus.BAD_REQUEST);
         }
 
     }
+
+    @PostMapping("/users/add")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<String> addUser(@RequestBody AccountDTO accountDTO) {
+
+        try{
+            Account account = new Account();
+            account.setEmail(accountDTO.getEmail());
+            account.setPassword(accountDTO.getPassword());
+            account.setRole("ROLE_USER");
+            accountService.save(account);
+            return ResponseEntity.ok(AccountSuccess.ACCOUNT_ADDED.toString());
+
+        }catch (Exception e){
+            log.debug(AccountError.ADD_ACCOUNT_ERROR.toString() + ": " +  e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+
+    }
+
 
 }

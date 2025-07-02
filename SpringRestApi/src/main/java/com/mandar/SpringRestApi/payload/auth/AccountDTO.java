@@ -1,14 +1,14 @@
 package com.mandar.SpringRestApi.payload.auth;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
-public class TokenDTO {
+public class AccountDTO {
 
-    private String token;
+    private String email;
+    private String password;
+
 
 }
