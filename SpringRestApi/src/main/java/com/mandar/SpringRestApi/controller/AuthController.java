@@ -8,7 +8,10 @@ import com.mandar.SpringRestApi.service.AccountService;
 import com.mandar.SpringRestApi.service.TokenService;
 import com.mandar.SpringRestApi.util.constants.AccountError;
 import com.mandar.SpringRestApi.util.constants.AccountSuccess;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -38,7 +41,7 @@ public class AuthController {
 
     @PostMapping("/token")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<TokenDTO> token(@RequestBody UserLoginDTO userLoginDTO) {
+    public ResponseEntity<TokenDTO> token(@Valid @RequestBody UserLoginDTO userLoginDTO) {
 
         log.info("Login attempt for email: {}", userLoginDTO.getEmail());
 
@@ -53,9 +56,12 @@ public class AuthController {
 
     }
 
-    @PostMapping("/users/add")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<String> addUser(@RequestBody AccountDTO accountDTO) {
+    @PostMapping(value = "/users/add", consumes = "application/json", produces = "application/json")
+    @ResponseStatus(HttpStatus.CREATED)
+    @ApiResponse(responseCode = "400", description = "Please enter a valid email and password length between 6 & 20")
+    @ApiResponse(responseCode = "201", description = "Account added")
+    @Operation(summary = "Add a new user")
+    public ResponseEntity<String> addUser(@Valid @RequestBody AccountDTO accountDTO) {
 
         try{
             Account account = new Account();

@@ -45,4 +45,10 @@ public class AccountService implements UserDetailsService {
 
         return new User(account.getEmail(), account.getPassword(), grantedAuthorityList);
     }
+    public List<Account> findAll() {
+        return accountRepository.findAll();
+    }
+
+
+
 }
