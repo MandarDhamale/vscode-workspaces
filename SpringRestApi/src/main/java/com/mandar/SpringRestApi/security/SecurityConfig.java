@@ -87,7 +87,7 @@ public class SecurityConfig {
                 http
                                 .authorizeHttpRequests(auth -> auth
                                                 .requestMatchers("/auth/token", "/", "/swagger-ui/**", "/v3/api-docs/**",
-                                                                "/test2", "/account", "auth/users/add", "/accounts")
+                                                                "/test2", "/account", "auth/users/add", "/accounts", "/auth/users")
                                                 .permitAll()
                                                 .requestMatchers("/test").authenticated())
                                 .sessionManagement(session -> session

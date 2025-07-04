@@ -21,6 +21,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/auth")
 @Tag(name = "Auth Controller", description = "Controller for account management")
@@ -40,6 +42,7 @@ public class AuthController {
 
 
     @PostMapping("/token")
+    @Operation(summary = "Generate new token")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<TokenDTO> token(@Valid @RequestBody UserLoginDTO userLoginDTO) {
 
@@ -60,22 +63,36 @@ public class AuthController {
     @ResponseStatus(HttpStatus.CREATED)
     @ApiResponse(responseCode = "400", description = "Please enter a valid email and password length between 6 & 20")
     @ApiResponse(responseCode = "201", description = "Account added")
+    @ApiResponse(responseCode = "200", description = "Account added")
     @Operation(summary = "Add a new user")
     public ResponseEntity<String> addUser(@Valid @RequestBody AccountDTO accountDTO) {
 
-        try{
+        try {
             Account account = new Account();
             account.setEmail(accountDTO.getEmail());
             account.setPassword(accountDTO.getPassword());
-            account.setRole("ROLE_USER");
             accountService.save(account);
             return ResponseEntity.ok(AccountSuccess.ACCOUNT_ADDED.toString());
 
-        }catch (Exception e){
-            log.debug(AccountError.ADD_ACCOUNT_ERROR.toString() + ": " +  e.getMessage());
+        } catch (Exception e) {
+            log.debug(AccountError.ADD_ACCOUNT_ERROR.toString() + ": " + e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
 
+    }
+
+//    @GetMapping(value = "/users", produces = "application/json")
+//    @Operation(summary = "List all users")
+//    public List<Account> listUsers(@Valid @RequestBody AccountDTO accountDTO) {
+//        return accountService.findAll();
+//    }
+
+
+    @GetMapping(value = "/users", produces = "application/json")
+    @Operation(summary = "List all users")
+    public ResponseEntity<List<Account>> getAllAccounts() {
+        List<Account> accounts = accountService.findAll();
+        return ResponseEntity.ok(accounts);
     }
 
 

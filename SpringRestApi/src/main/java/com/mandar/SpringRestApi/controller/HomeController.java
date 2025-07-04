@@ -44,10 +44,10 @@ public class HomeController {
         return ResponseEntity.ok(saved);
     }
 
-    @GetMapping("/accounts")
-    public ResponseEntity<List<Account>> getAllAccounts() {
-        List<Account> accounts = accountService.findAll();
-        return ResponseEntity.ok(accounts);
-    }
+//    @GetMapping("/accounts")
+//    public ResponseEntity<List<Account>> getAllAccounts() {
+//        List<Account> accounts = accountService.findAll();
+//        return ResponseEntity.ok(accounts);
+//    }
     
 }

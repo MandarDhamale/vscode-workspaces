@@ -25,8 +25,10 @@ public class AccountService implements UserDetailsService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public Account save(Account account){
+    public Account save(Account account) {
         account.setPassword(passwordEncoder.encode(account.getPassword()));
+        if(account.getRole() == null)
+            account.setRole("ROLE_USER");
         return accountRepository.save(account);
     }
 
@@ -35,7 +37,7 @@ public class AccountService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         Optional<Account> optionalAccount = accountRepository.findByEmail(username);
-        if(!optionalAccount.isPresent()){
+        if (!optionalAccount.isPresent()) {
             throw new UsernameNotFoundException("Account not found");
         }
 
@@ -45,10 +47,10 @@ public class AccountService implements UserDetailsService {
 
         return new User(account.getEmail(), account.getPassword(), grantedAuthorityList);
     }
+
     public List<Account> findAll() {
         return accountRepository.findAll();
     }
-
 
 
 }
