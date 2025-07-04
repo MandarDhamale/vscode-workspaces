@@ -2,6 +2,7 @@ package com.mandar.SpringRestApi.controller;
 
 import com.mandar.SpringRestApi.model.Account;
 import com.mandar.SpringRestApi.payload.auth.AccountDTO;
+import com.mandar.SpringRestApi.payload.auth.AccountViewDTO;
 import com.mandar.SpringRestApi.payload.auth.TokenDTO;
 import com.mandar.SpringRestApi.payload.auth.UserLoginDTO;
 import com.mandar.SpringRestApi.service.AccountService;
@@ -21,6 +22,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -71,6 +73,7 @@ public class AuthController {
             Account account = new Account();
             account.setEmail(accountDTO.getEmail());
             account.setPassword(accountDTO.getPassword());
+            account.setRole(accountDTO.getRole());
             accountService.save(account);
             return ResponseEntity.ok(AccountSuccess.ACCOUNT_ADDED.toString());
 
@@ -89,9 +92,15 @@ public class AuthController {
 
 
     @GetMapping(value = "/users", produces = "application/json")
+    @ApiResponse(responseCode = "200", description = "List of users")
     @Operation(summary = "List all users")
-    public ResponseEntity<List<Account>> getAllAccounts() {
-        List<Account> accounts = accountService.findAll();
+    public ResponseEntity<List<AccountViewDTO>> getAllAccounts() {
+        List<AccountViewDTO> accounts = new ArrayList<>();
+
+        for (Account account : accountService.findAll()) {
+            accounts.add(new AccountViewDTO(account.getId(), account.getEmail(), account.getRole()));
+        }
+
         return ResponseEntity.ok(accounts);
     }
 
