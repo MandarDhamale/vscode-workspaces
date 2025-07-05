@@ -2,6 +2,7 @@ package com.mandar.SpringRestApi.controller;
 
 import com.mandar.SpringRestApi.model.Account;
 import com.mandar.SpringRestApi.service.AccountService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,32 +23,21 @@ public class HomeController {
     private AccountService accountService;
 
     @GetMapping("/")
-    public String home(){
+    @Operation(summary = "Home page")
+    public String home() {
         return "Hello World!";
     }
 
-    @GetMapping("/test")
-    @Tag(name="Test", description="Test API")
-    @SecurityRequirement(name="mrd-api")
-    public String test(){
-        return "Test API";
-    }
-
-    @GetMapping("/test2")
-    public String test2(){
-        return "Test2 API";
-    }
-
-    @PostMapping("/account")
-    public ResponseEntity<Account> createAccount(@RequestBody Account account){
-        Account saved = accountService.save(account);
-        return ResponseEntity.ok(saved);
-    }
+//    @PostMapping("/account")
+//    public ResponseEntity<Account> createAccount(@RequestBody Account account){
+//        Account saved = accountService.save(account);
+//        return ResponseEntity.ok(saved);
+//    }
 
 //    @GetMapping("/accounts")
 //    public ResponseEntity<List<Account>> getAllAccounts() {
 //        List<Account> accounts = accountService.findAll();
 //        return ResponseEntity.ok(accounts);
 //    }
-    
+
 }

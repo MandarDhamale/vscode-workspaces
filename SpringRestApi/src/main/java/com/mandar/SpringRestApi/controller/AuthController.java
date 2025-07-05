@@ -23,7 +23,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
@@ -67,7 +69,7 @@ public class AuthController {
     @ApiResponse(responseCode = "201", description = "Account added")
     @ApiResponse(responseCode = "200", description = "Account added")
     @Operation(summary = "Add a new user")
-    public ResponseEntity<String> addUser(@Valid @RequestBody AccountDTO accountDTO) {
+    public ResponseEntity<Map<String, String>> addUser(@Valid @RequestBody AccountDTO accountDTO) {
 
         try {
             Account account = new Account();
@@ -75,7 +77,9 @@ public class AuthController {
             account.setPassword(accountDTO.getPassword());
             account.setRole(accountDTO.getRole());
             accountService.save(account);
-            return ResponseEntity.ok(AccountSuccess.ACCOUNT_ADDED.toString());
+            Map<String, String> response = new HashMap<>();
+            response.put("message", AccountSuccess.ACCOUNT_ADDED.toString());
+            return ResponseEntity.ok(response);
 
         } catch (Exception e) {
             log.debug(AccountError.ADD_ACCOUNT_ERROR.toString() + ": " + e.getMessage());
@@ -93,6 +97,7 @@ public class AuthController {
 
     @GetMapping(value = "/users", produces = "application/json")
     @ApiResponse(responseCode = "200", description = "List of users")
+    @ApiResponse(responseCode = "401", description = "Please check access token")
     @Operation(summary = "List all users")
     public ResponseEntity<List<AccountViewDTO>> getAllAccounts() {
         List<AccountViewDTO> accounts = new ArrayList<>();

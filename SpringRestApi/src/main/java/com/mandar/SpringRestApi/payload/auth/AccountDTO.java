@@ -19,6 +19,7 @@ public class AccountDTO {
     @Schema(description = "Password", example = "hj37e!", requiredMode = Schema.RequiredMode.REQUIRED, minLength = 6, maxLength = 20)
     private String password;
 
+    @Schema(description = "Role", example = "ROLE_USER")
     private String role;
 
 }

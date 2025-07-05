@@ -33,74 +33,69 @@ import com.nimbusds.jose.proc.SecurityContext;
 @EnableWebSecurity
 public class SecurityConfig {
 
-        private final RSAKeyProperties rsaKeys;
-        private RSAKey rsaKey;
+    private final RSAKeyProperties rsaKeys;
+    private RSAKey rsaKey;
 
+    public SecurityConfig(RSAKeyProperties rsaKeys) {
+        this.rsaKeys = rsaKeys;
+    }
 
-        public SecurityConfig(RSAKeyProperties rsaKeys) {
-                this.rsaKeys = rsaKeys;
-        }
+    @Bean
+    public JWKSource<SecurityContext> jwkSource() {
+        rsaKey = Jwks.generateRsa();
+        JWKSet jwkSet = new JWKSet(rsaKey);
+        return (jwkSelector, context) -> jwkSelector.select(jwkSet);
+    }
 
-        @Bean
-        public JWKSource<SecurityContext> jwkSource(){
-             rsaKey = Jwks.generateRsa();
-             JWKSet jwkSet = new JWKSet(rsaKey);
-             return (jwkSelector, context) -> jwkSelector.select(jwkSet);
-        }
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
-        @Bean
-        public PasswordEncoder passwordEncoder(){
-                return new BCryptPasswordEncoder();
-        }
+    // @Bean
+    // public InMemoryUserDetailsManager users() {
+    // return new InMemoryUserDetailsManager(
+    // User.withUsername("mrd")
+    // .password("{noop}mrd")
+    // .authorities("read")
+    // .build());
+    // }
 
+    @Bean
+    public AuthenticationManager authenticationManager(UserDetailsService userDetailsService,
+            PasswordEncoder passwordEncoder) {
+        var authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userDetailsService);
+        authProvider.setPasswordEncoder(passwordEncoder);
+        return new ProviderManager(authProvider);
+    }
 
-//        @Bean
-//        public InMemoryUserDetailsManager users() {
-//                return new InMemoryUserDetailsManager(
-//                                User.withUsername("mrd")
-//                                                .password("{noop}mrd")
-//                                                .authorities("read")
-//                                                .build());
-//        }
+    @Bean
+    JwtEncoder jwtEncoder(JWKSource<SecurityContext> jwks) {
+        return new NimbusJwtEncoder(jwks);
+    }
 
-        @Bean
-        public AuthenticationManager authenticationManager(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder){
-                var authProvider = new DaoAuthenticationProvider();
-                authProvider.setUserDetailsService(userDetailsService);
-                authProvider.setPasswordEncoder(passwordEncoder);
-                return new ProviderManager(authProvider);
-        }
+    @Bean
+    JwtDecoder jwtDecoder() throws JOSEException {
+        return NimbusJwtDecoder.withPublicKey(rsaKey.toRSAPublicKey()).build();
+    }
 
-        @Bean
-        JwtEncoder jwtEncoder(JWKSource<SecurityContext> jwks){
-                return new NimbusJwtEncoder(jwks);
-        }
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        @Bean
-        JwtDecoder jwtDecoder() throws JOSEException {
-                return NimbusJwtDecoder.withPublicKey(rsaKey.toRSAPublicKey()).build();
-        }
+        http.authorizeHttpRequests(auth -> auth
+                .requestMatchers("/auth/token", "/auth/users/add", "/swagger-ui/**", "/v3/api-docs/**")
+                .permitAll()
+                        .requestMatchers("/auth/users").hasRole("USER")
+                        .requestMatchers("/test").authenticated())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS) // stateless
+                                                                                                             // session
+                ).oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt); // Enable JWT
+        // TODO: remove these after upgrading the DB from H2 infile to SQL or any other DB
+         http.csrf().disable();
+         http.headers().frameOptions().disable();
+        return http.build();
 
-        @Bean
-        public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
-                http
-                                .authorizeHttpRequests(auth -> auth
-                                                .requestMatchers("/auth/token", "/", "/swagger-ui/**", "/v3/api-docs/**",
-                                                                "/test2", "/account", "auth/users/add", "/accounts", "/auth/users")
-                                                .permitAll()
-                                                .requestMatchers("/test").authenticated())
-                                .sessionManagement(session -> session
-                                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Stateless
-                                                                                                        // session
-                                )
-                                .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt); // Enable JWT
-                                // TODO: remove these after upgrading the DB from H2 infile to SQL or any other DB
-                                http.csrf().disable();
-                                http.headers().frameOptions().disable();
-
-                return http.build();
-
-        }
+    }
 
 }
