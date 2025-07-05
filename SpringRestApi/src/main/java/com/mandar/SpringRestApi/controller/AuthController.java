@@ -11,6 +11,9 @@ import com.mandar.SpringRestApi.util.constants.AccountError;
 import com.mandar.SpringRestApi.util.constants.AccountSuccess;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
+import io.swagger.v3.oas.annotations.security.SecuritySchemes;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -47,6 +50,7 @@ public class AuthController {
 
     @PostMapping("/token")
     @Operation(summary = "Generate new token")
+    @ApiResponse(responseCode = "400", description = "Authentication error")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<TokenDTO> token(@Valid @RequestBody UserLoginDTO userLoginDTO) {
 
@@ -99,6 +103,7 @@ public class AuthController {
     @ApiResponse(responseCode = "200", description = "List of users")
     @ApiResponse(responseCode = "401", description = "Please check access token")
     @Operation(summary = "List all users")
+    @SecurityRequirement(name = "mrd-api")
     public ResponseEntity<List<AccountViewDTO>> getAllAccounts() {
         List<AccountViewDTO> accounts = new ArrayList<>();
 

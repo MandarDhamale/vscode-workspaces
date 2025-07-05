@@ -86,7 +86,7 @@ public class SecurityConfig {
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers("/auth/token", "/auth/users/add", "/swagger-ui/**", "/v3/api-docs/**")
                 .permitAll()
-                        .requestMatchers("/auth/users").hasRole("USER")
+                        .requestMatchers("/auth/users").hasAuthority("SCOPE_ROLE_ADMIN")
                         .requestMatchers("/test").authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS) // stateless
                                                                                                              // session
