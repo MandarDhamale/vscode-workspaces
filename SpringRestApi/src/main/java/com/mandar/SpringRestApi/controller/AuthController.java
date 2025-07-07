@@ -1,10 +1,7 @@
 package com.mandar.SpringRestApi.controller;
 
 import com.mandar.SpringRestApi.model.Account;
-import com.mandar.SpringRestApi.payload.auth.AccountDTO;
-import com.mandar.SpringRestApi.payload.auth.AccountViewDTO;
-import com.mandar.SpringRestApi.payload.auth.TokenDTO;
-import com.mandar.SpringRestApi.payload.auth.UserLoginDTO;
+import com.mandar.SpringRestApi.payload.auth.*;
 import com.mandar.SpringRestApi.service.AccountService;
 import com.mandar.SpringRestApi.service.TokenService;
 import com.mandar.SpringRestApi.util.constants.AccountError;
@@ -25,10 +22,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/auth")
@@ -112,6 +106,27 @@ public class AuthController {
         }
 
         return ResponseEntity.ok(accounts);
+    }
+
+    @GetMapping(value = "/profile", produces = "application/json")
+    @ApiResponse(responseCode = "200", description = "List of users")
+    @ApiResponse(responseCode = "401", description = "Please check access token")
+    @ApiResponse(responseCode = "403", description = "Scope restriction")
+    @Operation(summary = "View profile")
+    @SecurityRequirement(name = "mrd-api")
+    public ResponseEntity<ProfileDTO> getProfile(Authentication authentication) {
+
+        String email = authentication.getName();
+        Optional<Account> optionalAccount = accountService.findByEmail(email);
+
+        if(optionalAccount.isPresent()){
+            Account account = optionalAccount.get();
+            ProfileDTO profileDTO = new ProfileDTO(account.getId(), account.getEmail(), account.getAuthorities());
+            return ResponseEntity.ok(profileDTO);
+        }
+        return null;
+
+
     }
 
 
