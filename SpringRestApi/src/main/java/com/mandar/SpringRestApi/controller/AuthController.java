@@ -79,7 +79,7 @@ public class AuthController {
             Account account = new Account();
             account.setEmail(accountDTO.getEmail());
             account.setPassword(accountDTO.getPassword());
-            account.setRole(accountDTO.getRole());
+            account.setAuthorities(accountDTO.getAuthorities());
             accountService.save(account);
             Map<String, String> response = new HashMap<>();
             response.put("message", AccountSuccess.ACCOUNT_ADDED.toString());
@@ -108,7 +108,7 @@ public class AuthController {
         List<AccountViewDTO> accounts = new ArrayList<>();
 
         for (Account account : accountService.findAll()) {
-            accounts.add(new AccountViewDTO(account.getId(), account.getEmail(), account.getRole()));
+            accounts.add(new AccountViewDTO(account.getId(), account.getEmail(), account.getAuthorities()));
         }
 
         return ResponseEntity.ok(accounts);

@@ -2,6 +2,7 @@ package com.mandar.SpringRestApi.service;
 
 import com.mandar.SpringRestApi.model.Account;
 import com.mandar.SpringRestApi.repository.AccountRepository;
+import com.mandar.SpringRestApi.util.constants.Authority;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -27,8 +28,8 @@ public class AccountService implements UserDetailsService {
 
     public Account save(Account account) {
         account.setPassword(passwordEncoder.encode(account.getPassword()));
-        if(account.getRole() == null)
-            account.setRole("ROLE_USER");
+        if(account.getAuthorities() == null)
+            account.setAuthorities(Authority.USER.toString());
         return accountRepository.save(account);
     }
 
@@ -43,7 +44,7 @@ public class AccountService implements UserDetailsService {
 
         Account account = optionalAccount.get();
         List<GrantedAuthority> grantedAuthorityList = new ArrayList<>();
-        grantedAuthorityList.add(new SimpleGrantedAuthority(account.getRole()));
+        grantedAuthorityList.add(new SimpleGrantedAuthority(account.getAuthorities()));
 
         return new User(account.getEmail(), account.getPassword(), grantedAuthorityList);
     }
