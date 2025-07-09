@@ -126,6 +126,25 @@ public class AuthController {
         }
         return null;
 
+    }
+
+    @GetMapping(value = "/profile", produces = "application/json")
+    @ApiResponse(responseCode = "200", description = "List of users")
+    @ApiResponse(responseCode = "401", description = "Please check access token")
+    @ApiResponse(responseCode = "403", description = "Scope restriction")
+    @Operation(summary = "View profile")
+    @SecurityRequirement(name = "mrd-api")
+    public ResponseEntity<ProfileDTO> updatePassword(Authentication authentication) {
+
+        String email = authentication.getName();
+        Optional<Account> optionalAccount = accountService.findByEmail(email);
+
+        if(optionalAccount.isPresent()){
+            Account account = optionalAccount.get();
+            ProfileDTO profileDTO = new ProfileDTO(account.getId(), account.getEmail(), account.getAuthorities());
+            return ResponseEntity.ok(profileDTO);
+        }
+        return null;
 
     }
 
