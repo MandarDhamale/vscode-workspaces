@@ -87,7 +87,7 @@ public class SecurityConfig {
                 .requestMatchers("/auth/token", "/auth/users/add", "/swagger-ui/**", "/v3/api-docs/**")
                 .permitAll()
                         .requestMatchers("/auth/users").hasAnyAuthority("SCOPE_ADMIN")
-                        .requestMatchers("/test", "/auth/profile").authenticated())
+                        .requestMatchers("/test", "/auth/profile", "auth/profile/update-password").authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS) // stateless
                                                                                                              // session
                 ).oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt); // Enable JWT

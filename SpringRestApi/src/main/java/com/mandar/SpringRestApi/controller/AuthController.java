@@ -124,27 +124,30 @@ public class AuthController {
             ProfileDTO profileDTO = new ProfileDTO(account.getId(), account.getEmail(), account.getAuthorities());
             return ResponseEntity.ok(profileDTO);
         }
-        return null;
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
     }
 
-    @GetMapping(value = "/profile", produces = "application/json")
+    @PutMapping(value = "/profile/update-password", produces = "application/json")
     @ApiResponse(responseCode = "200", description = "List of users")
     @ApiResponse(responseCode = "401", description = "Please check access token")
     @ApiResponse(responseCode = "403", description = "Scope restriction")
-    @Operation(summary = "View profile")
+    @Operation(summary = "Update password")
     @SecurityRequirement(name = "mrd-api")
-    public ResponseEntity<ProfileDTO> updatePassword(Authentication authentication) {
+    public ResponseEntity<Map<String, String>> updatePassword(@Valid @RequestBody PasswordDTO passwordDTO, Authentication authentication) {
 
         String email = authentication.getName();
         Optional<Account> optionalAccount = accountService.findByEmail(email);
 
         if(optionalAccount.isPresent()){
             Account account = optionalAccount.get();
-            ProfileDTO profileDTO = new ProfileDTO(account.getId(), account.getEmail(), account.getAuthorities());
-            return ResponseEntity.ok(profileDTO);
+            account.setPassword(passwordDTO.getPassword());
+            accountService.save(account);
+            Map<String, String> response = new HashMap<>();
+            response.put("message", AccountSuccess.PASSWORD_UPDATED.toString());
+            return ResponseEntity.ok(response);
         }
-        return null;
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
     }
 

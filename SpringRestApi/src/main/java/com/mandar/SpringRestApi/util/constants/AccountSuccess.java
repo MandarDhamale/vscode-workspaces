@@ -1,5 +1,6 @@
 package com.mandar.SpringRestApi.util.constants;
 
 public enum AccountSuccess {
-    ACCOUNT_ADDED
+    ACCOUNT_ADDED,
+    PASSWORD_UPDATED
 }
