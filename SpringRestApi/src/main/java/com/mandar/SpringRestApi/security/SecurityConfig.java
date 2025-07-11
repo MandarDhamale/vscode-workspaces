@@ -84,7 +84,7 @@ public class SecurityConfig {
                 .permitAll()
                         .requestMatchers("/auth/users").hasAnyAuthority("SCOPE_ADMIN", "SCOPE_READ")
                         .requestMatchers("/auth/users/{user_id}/update-authorities").hasAuthority("SCOPE_ADMIN")
-                        .requestMatchers("/test", "/auth/profile", "auth/profile/update-password").authenticated())
+                        .requestMatchers("/auth/profile", "/auth/profile/update-password", "/auth/profile/delete").authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS) // stateless
                                                                                                              // session
                 ).oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt); // Enable JWT

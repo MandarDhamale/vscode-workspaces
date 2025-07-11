@@ -61,5 +61,9 @@ public class AccountService implements UserDetailsService {
         return accountRepository.findById(id);
     }
 
+    public void deleteById(long id){
+        accountRepository.deleteById(id);
+    }
+
 
 }

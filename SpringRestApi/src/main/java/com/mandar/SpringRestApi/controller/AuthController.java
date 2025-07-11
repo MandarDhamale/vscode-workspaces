@@ -172,5 +172,27 @@ public class AuthController {
 
     }
 
+    @DeleteMapping(value = "/profile/delete", produces = "application/json")
+    @ApiResponse(responseCode = "200", description = "Profile deleted")
+    @ApiResponse(responseCode = "401", description = "Please check access token")
+    @ApiResponse(responseCode = "403", description = "Scope restriction")
+    @Operation(summary = "Delete profile")
+    @SecurityRequirement(name = "mrd-api")
+    public ResponseEntity<Map<String, String>> deleteProfile(Authentication authentication) {
+
+        String email = authentication.getName();
+        Optional<Account> optionalAccount = accountService.findByEmail(email);
+
+        if (optionalAccount.isPresent()) {
+            accountService.deleteById(optionalAccount.get().getId());
+            Map<String, String> response = new HashMap<>();
+            response.put("message", AccountSuccess.ACCOUNT_DELETED.toString());
+            return ResponseEntity.ok(response);
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+
+    }
+
+
 
 }
