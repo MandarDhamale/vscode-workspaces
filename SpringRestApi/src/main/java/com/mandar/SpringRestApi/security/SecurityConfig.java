@@ -80,11 +80,11 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http.authorizeHttpRequests(auth -> auth
-                .requestMatchers("/","/auth/token", "/auth/users/add", "/swagger-ui/**", "/v3/api-docs/**")
+                .requestMatchers("/","/api/v1/auth/token", "/api/v1/auth/users/add", "/swagger-ui/**", "/v3/api-docs/**")
                 .permitAll()
-                        .requestMatchers("/auth/users").hasAnyAuthority("SCOPE_ADMIN", "SCOPE_READ")
-                        .requestMatchers("/auth/users/{user_id}/update-authorities").hasAuthority("SCOPE_ADMIN")
-                        .requestMatchers("/auth/profile", "/auth/profile/update-password", "/auth/profile/delete").authenticated())
+                        .requestMatchers("/api/v1/auth/users").hasAnyAuthority("SCOPE_ADMIN", "SCOPE_READ")
+                        .requestMatchers("/api/v1/auth/users/{user_id}/update-authorities").hasAuthority("SCOPE_ADMIN")
+                        .requestMatchers("/api/v1/auth/profile", "/api/v1/auth/profile/update-password", "/api/v1/auth/profile/delete").authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS) // stateless
                                                                                                              // session
                 ).oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt); // Enable JWT
