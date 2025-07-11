@@ -145,11 +145,11 @@ public class AuthController {
             response.put("message", AccountSuccess.PASSWORD_UPDATED.toString());
             return ResponseEntity.ok(response);
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
     }
 
-    @PutMapping(value = "/users/update-authorities/{user_id}", produces = "application/json", consumes = "application/json")
+    @PutMapping(value = "/users/{user_id}/update-authorities", produces = "application/json", consumes = "application/json")
     @ApiResponse(responseCode = "200", description = "Update authorities of users (admin only)")
     @ApiResponse(responseCode = "401", description = "Please check access token")
     @ApiResponse(responseCode = "403", description = "Scope restriction")
@@ -168,7 +168,7 @@ public class AuthController {
             response.put("message", AccountSuccess.AUTHORITIES_UPDATED.toString());
             return ResponseEntity.ok(response);
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
     }
 
