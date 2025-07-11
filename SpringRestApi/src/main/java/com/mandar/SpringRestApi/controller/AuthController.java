@@ -51,8 +51,7 @@ public class AuthController {
         log.info("Login attempt for email: {}", userLoginDTO.getEmail());
 
         try {
-            Authentication authentication = authenticationManager
-                    .authenticate(new UsernamePasswordAuthenticationToken(userLoginDTO.getEmail(), userLoginDTO.getPassword()));
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userLoginDTO.getEmail(), userLoginDTO.getPassword()));
             return ResponseEntity.ok(new TokenDTO(tokenService.generateToken(authentication)));
         } catch (Exception e) {
             log.debug(AccountError.TOKEN_GENERATION_ERROR.toString() + " " + e.getMessage());
@@ -92,7 +91,6 @@ public class AuthController {
 //        return accountService.findAll();
 //    }
 
-
     @GetMapping(value = "/users", produces = "application/json")
     @ApiResponse(responseCode = "200", description = "List of users")
     @ApiResponse(responseCode = "401", description = "Please check access token")
@@ -119,7 +117,7 @@ public class AuthController {
         String email = authentication.getName();
         Optional<Account> optionalAccount = accountService.findByEmail(email);
 
-        if(optionalAccount.isPresent()){
+        if (optionalAccount.isPresent()) {
             Account account = optionalAccount.get();
             ProfileDTO profileDTO = new ProfileDTO(account.getId(), account.getEmail(), account.getAuthorities());
             return ResponseEntity.ok(profileDTO);
@@ -129,7 +127,7 @@ public class AuthController {
     }
 
     @PutMapping(value = "/profile/update-password", produces = "application/json")
-    @ApiResponse(responseCode = "200", description = "List of users")
+    @ApiResponse(responseCode = "200", description = "Password updated")
     @ApiResponse(responseCode = "401", description = "Please check access token")
     @ApiResponse(responseCode = "403", description = "Scope restriction")
     @Operation(summary = "Update password")
@@ -139,12 +137,35 @@ public class AuthController {
         String email = authentication.getName();
         Optional<Account> optionalAccount = accountService.findByEmail(email);
 
-        if(optionalAccount.isPresent()){
+        if (optionalAccount.isPresent()) {
             Account account = optionalAccount.get();
             account.setPassword(passwordDTO.getPassword());
             accountService.save(account);
             Map<String, String> response = new HashMap<>();
             response.put("message", AccountSuccess.PASSWORD_UPDATED.toString());
+            return ResponseEntity.ok(response);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+
+    }
+
+    @PutMapping(value = "/users/update-authorities/{user_id}", produces = "application/json", consumes = "application/json")
+    @ApiResponse(responseCode = "200", description = "Update authorities of users (admin only)")
+    @ApiResponse(responseCode = "401", description = "Please check access token")
+    @ApiResponse(responseCode = "403", description = "Scope restriction")
+    @ApiResponse(responseCode = "404", description = "User not found")
+    @Operation(summary = "Update authorities")
+    @SecurityRequirement(name = "mrd-api")
+    public ResponseEntity<Map<String, String>> updateAuthorities(@Valid @RequestBody AuthoritiesDTO authoritiesDTO, @PathVariable long user_id) {
+
+        Optional<Account> optionalAccount = accountService.findById(user_id);
+
+        if (optionalAccount.isPresent()) {
+            Account account = optionalAccount.get();
+            account.setAuthorities(authoritiesDTO.getAuthorities());
+            accountService.save(account);
+            Map<String, String> response = new HashMap<>();
+            response.put("message", AccountSuccess.AUTHORITIES_UPDATED.toString());
             return ResponseEntity.ok(response);
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

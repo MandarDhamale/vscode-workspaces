@@ -57,4 +57,9 @@ public class AccountService implements UserDetailsService {
         return accountRepository.findByEmail(email);
     }
 
+    public Optional<Account> findById(Long id){
+        return accountRepository.findById(id);
+    }
+
+
 }
