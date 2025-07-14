@@ -5,6 +5,8 @@ import com.mandar.SpringRestApi.repository.AlbumRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class AlbumService {
 
@@ -13,6 +15,10 @@ public class AlbumService {
 
     public Album save(Album album){
         return albumRepository.save(album);
+    }
+
+    public List<Album> findByOwnerId(long id){
+        return albumRepository.findByOwnerId(id);
     }
 
 }

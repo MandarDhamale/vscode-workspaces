@@ -1,15 +1,15 @@
 package com.mandar.SpringRestApi.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.query.sql.internal.ParameterRecognizerImpl;
 
 @Entity
 @Getter
 @Setter
 @ToString
+@AllArgsConstructor
+@NoArgsConstructor
 public class Album {
 
     @Id

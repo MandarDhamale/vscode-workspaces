@@ -1,4 +1,4 @@
-package com.mandar.SpringRestApi.util.constants;
+package com.mandar.SpringRestApi.util.constants.account;
 
 public enum AccountSuccess {
     ACCOUNT_ADDED,

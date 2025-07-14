@@ -2,7 +2,7 @@ package com.mandar.SpringRestApi.service;
 
 import com.mandar.SpringRestApi.model.Account;
 import com.mandar.SpringRestApi.repository.AccountRepository;
-import com.mandar.SpringRestApi.util.constants.Authority;
+import com.mandar.SpringRestApi.util.constants.account.Authority;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
