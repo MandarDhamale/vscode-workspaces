@@ -84,7 +84,7 @@ public class SecurityConfig {
                 .permitAll()
                         .requestMatchers("/api/v1/auth/users").hasAnyAuthority("SCOPE_ADMIN", "SCOPE_READ")
                         .requestMatchers("/api/v1/auth/users/{user_id}/update-authorities").hasAuthority("SCOPE_ADMIN")
-                        .requestMatchers("/api/v1/album/add", "/api/v1/album/albums", "/api/v1/album/photos").authenticated()
+                        .requestMatchers("/api/v1/album/add", "/api/v1/album/albums", "/api/v1/album/{album_id}/upload-photos").authenticated()
                         .requestMatchers("/api/v1/auth/profile", "/api/v1/auth/profile/update-password", "/api/v1/auth/profile/delete").authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS) // stateless
                                                                                                              // session
