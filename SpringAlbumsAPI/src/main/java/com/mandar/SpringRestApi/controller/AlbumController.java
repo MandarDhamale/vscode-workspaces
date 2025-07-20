@@ -2,10 +2,12 @@ package com.mandar.SpringRestApi.controller;
 
 import com.mandar.SpringRestApi.model.Account;
 import com.mandar.SpringRestApi.model.Album;
+import com.mandar.SpringRestApi.model.Photo;
 import com.mandar.SpringRestApi.payload.album.AlbumPayloadDTO;
 import com.mandar.SpringRestApi.payload.album.AlbumViewDTO;
 import com.mandar.SpringRestApi.service.AccountService;
 import com.mandar.SpringRestApi.service.AlbumService;
+import com.mandar.SpringRestApi.service.PhotoService;
 import com.mandar.SpringRestApi.util.AppUtils.AppUtil;
 import com.mandar.SpringRestApi.util.constants.album.AlbumError;
 import io.swagger.v3.oas.annotations.Operation;
@@ -44,6 +46,8 @@ public class AlbumController {
     @Autowired
     private AlbumService albumService;
 
+    @Autowired
+    private PhotoService photoService;
 
     @PostMapping(value = "/add", produces = "application/json", consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
@@ -74,7 +78,7 @@ public class AlbumController {
         }
     }
 
-    @GetMapping(value = "/albums", produces = "application/json", consumes = "application/json")
+    @GetMapping(value = "/albums", produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
     @ApiResponse(responseCode = "200", description = "List of albums")
     @ApiResponse(responseCode = "401", description = "Token missing")
@@ -96,6 +100,7 @@ public class AlbumController {
     @PostMapping(value = "/{album_id}/upload-photos", consumes = {"multipart/form-data"})
     @Operation(summary = "Upload photos in album")
     @ApiResponse(responseCode = "400", description = "Please check the payload or token")
+    @ApiResponse(responseCode = "401", description = "Invalid token error")
     @SecurityRequirement(name = "mrd-api")
     public ResponseEntity<List<String>> addPhotos(@RequestPart(required = true) MultipartFile[] files, @PathVariable long album_id, Authentication authentication){
 
@@ -134,9 +139,19 @@ public class AlbumController {
                     Path path = Paths.get(absoluteFileLocation);
                     Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
 
+                    Photo photo = new Photo();
+                    photo.setName(fileName);
+                    photo.setFileName(finalPhotoName);
+                    photo.setOriginalFileName(fileName);
+                    photo.setAlbum(album);
+                    photoService.save(photo);
+                    System.out.println("[DB Operation] " + photo.toString() + " has been saved to DB");
+
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
+            }else {
+                fileNamesWithError.add(file.getOriginalFilename());
             }
         });
 

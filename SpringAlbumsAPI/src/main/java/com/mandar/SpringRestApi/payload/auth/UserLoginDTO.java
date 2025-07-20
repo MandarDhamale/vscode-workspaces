@@ -11,11 +11,11 @@ import lombok.Setter;
 public class UserLoginDTO {
 
     @Email
-    @Schema(description = "Email address", example = "abc@gmail.com", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "Email address", example = "mandar@gmail.com", requiredMode = Schema.RequiredMode.REQUIRED)
     private String email;
 
     @Size(min = 6, max = 20)
-    @Schema(description = "Password", example = "hj37e!", requiredMode = Schema.RequiredMode.REQUIRED, minLength = 6, maxLength = 20)
+    @Schema(description = "Password", example = "mandar@2918", requiredMode = Schema.RequiredMode.REQUIRED, minLength = 6, maxLength = 20)
     private String password;
 
 }
