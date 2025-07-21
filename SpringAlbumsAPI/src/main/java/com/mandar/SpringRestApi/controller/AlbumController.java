@@ -24,14 +24,14 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 
 @RestController
@@ -39,6 +39,12 @@ import java.util.Optional;
 @Tag(name = "Album Controller", description = "Controller for album & photo management")
 @Slf4j
 public class AlbumController {
+
+    static final String PHOTOS_FOLDER_NAME = "photos";
+    static final String THUMBNAIL_FOLDER_NAME = "thumbnails";
+    static final int THUMBNAIL_WIDTH = 300;
+
+
 
     @Autowired
     private AccountService accountService;
@@ -102,7 +108,7 @@ public class AlbumController {
     @ApiResponse(responseCode = "400", description = "Please check the payload or token")
     @ApiResponse(responseCode = "401", description = "Invalid token error")
     @SecurityRequirement(name = "mrd-api")
-    public ResponseEntity<List<String>> addPhotos(@RequestPart(required = true) MultipartFile[] files, @PathVariable long album_id, Authentication authentication){
+    public ResponseEntity<Map<String, List<String>>> addPhotos(@RequestPart(required = true) MultipartFile[] files, @PathVariable long album_id, Authentication authentication) {
 
         String email = authentication.getName();
         Optional<Account> optionalAccount = accountService.findByEmail(email);
@@ -110,12 +116,12 @@ public class AlbumController {
         Optional<Album> optionalAlbum = albumService.findById(album_id);
         Album album;
 
-        if(optionalAlbum.isPresent()){
+        if (optionalAlbum.isPresent()) {
             album = optionalAlbum.get();
-            if(account.getId() != album.getOwner().getId()){
+            if (account.getId() != album.getOwner().getId()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
             }
-        }else {
+        } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
 
@@ -124,18 +130,18 @@ public class AlbumController {
 
         Arrays.asList(files).stream().forEach(file -> {
             String contentType = file.getContentType();
-            if(contentType.equals("image/png") || contentType.equals("image/jpg") || contentType.equals("image/jpeg")){
+            if (contentType.equals("image/png") || contentType.equals("image/jpg") || contentType.equals("image/jpeg")) {
                 fileNamesWithSuccess.add(file.getOriginalFilename());
                 int length = 10;
                 boolean useLetters = true;
                 boolean useNumbers = true;
 
-                try{
+                try {
 
                     String fileName = file.getOriginalFilename();
                     String generatedString = RandomStringUtils.random(length, useLetters, useNumbers);
                     String finalPhotoName = generatedString + "_" + fileName;
-                    String absoluteFileLocation = AppUtil.getPhotoUploadPath(finalPhotoName, album_id);
+                    String absoluteFileLocation = AppUtil.getPhotoUploadPath(finalPhotoName, PHOTOS_FOLDER_NAME, album_id);
                     Path path = Paths.get(absoluteFileLocation);
                     Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
 
@@ -147,22 +153,31 @@ public class AlbumController {
                     photoService.save(photo);
                     System.out.println("[DB Operation] " + photo.toString() + " has been saved to DB");
 
+                    BufferedImage thumbnailImg = AppUtil.getThumbnail(file, THUMBNAIL_WIDTH);
+                    File thumbnailLocation = new File(AppUtil.getPhotoUploadPath(finalPhotoName, THUMBNAIL_FOLDER_NAME, album_id));
+                    ImageIO.write(thumbnailImg, file.getContentType().split("/")[1], thumbnailLocation);
+
+
                 } catch (Exception e) {
+                    log.debug(AlbumError.PHOTO_UPLOAD_ERROR.toString() + " " + e.getMessage());
+                    fileNamesWithError.add(file.getOriginalFilename());
                     throw new RuntimeException(e);
                 }
-            }else {
+            } else {
                 fileNamesWithError.add(file.getOriginalFilename());
             }
         });
 
-        if (!fileNamesWithSuccess.isEmpty()) {
-            return ResponseEntity.ok(fileNamesWithSuccess);
+        if (!fileNamesWithSuccess.isEmpty() || !fileNamesWithError.isEmpty()) {
+            Map<String, List<String>> response = new HashMap<>();
+            response.put("successFiles", fileNamesWithSuccess);
+            response.put("failedFiles", fileNamesWithError);
+            return ResponseEntity.ok(response);
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(fileNamesWithError);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
 
+
     }
-
-
 
 }
