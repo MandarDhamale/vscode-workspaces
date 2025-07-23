@@ -119,7 +119,7 @@ public class AlbumController {
         if (optionalAlbum.isPresent()) {
             album = optionalAlbum.get();
             if (account.getId() != album.getOwner().getId()) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);git
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
             }
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
@@ -179,5 +179,8 @@ public class AlbumController {
 
 
     }
+
+
+
 
 }

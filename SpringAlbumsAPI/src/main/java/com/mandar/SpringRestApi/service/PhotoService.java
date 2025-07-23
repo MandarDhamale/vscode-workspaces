@@ -5,6 +5,8 @@ import com.mandar.SpringRestApi.repository.PhotoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class PhotoService {
 
@@ -14,6 +16,10 @@ public class PhotoService {
 
     public Photo save(Photo photo){
         return photoRepository.save(photo);
+    }
+
+    public Optional<Photo> findById(long id){
+        return photoRepository.findById(id);
     }
 
 
