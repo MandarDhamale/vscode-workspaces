@@ -187,6 +187,21 @@ public class AlbumController {
     @SecurityRequirement(name = "mrd-api")
     public ResponseEntity<?> downloadPhoto(@PathVariable("album_id") long album_id, @PathVariable("photo_id") long photo_id, Authentication authentication) {
 
+        return downloadFile(album_id, photo_id, PHOTOS_FOLDER_NAME, authentication);
+
+    }
+
+    @GetMapping("albums/{album_id}/photos/{photo_id}/download-thumbnail")
+    @SecurityRequirement(name = "mrd-api")
+    public ResponseEntity<?> downloadThumbnail(@PathVariable("album_id") long album_id, @PathVariable("photo_id") long photo_id, Authentication authentication) {
+
+
+        return downloadFile(album_id, photo_id, THUMBNAIL_FOLDER_NAME, authentication);
+
+    }
+
+    private ResponseEntity<?> downloadFile(long album_id, long photo_id, String folderName, Authentication authentication) {
+
         String email = authentication.getName();
         Optional<Account> optionalAccount = accountService.findByEmail(email);
         Account account = optionalAccount.get();
