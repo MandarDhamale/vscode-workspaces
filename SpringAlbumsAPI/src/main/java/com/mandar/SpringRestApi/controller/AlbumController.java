@@ -223,7 +223,7 @@ public class AlbumController {
             Resource resource = null;
 
             try {
-                resource = AppUtil.getFileAsResource(album_id, PHOTOS_FOLDER_NAME, photo.getFileName());
+                resource = AppUtil.getFileAsResource(album_id, folderName, photo.getFileName());
             } catch (IOException e) {
                 return ResponseEntity.internalServerError().build();
             }
@@ -246,6 +246,5 @@ public class AlbumController {
         }
 
     }
-
 
 }
