@@ -19,6 +19,7 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.graphql.GraphQlProperties;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -88,6 +89,57 @@ public class AlbumController {
         }
     }
 
+    @PutMapping(value = "/albums/{album_id}/update", consumes = "application/json", produces = "application/json")
+    @ResponseStatus(HttpStatus.CREATED)
+    @ApiResponse(responseCode = "400", description = "Please add a valid description")
+    @ApiResponse(responseCode = "204", description = "Album updated")
+    @Operation(summary = "Update album")
+    @SecurityRequirement(name = "mrd-api")
+    public ResponseEntity<AlbumViewDTO> updateAlbum(@Valid @RequestBody AlbumPayloadDTO albumPayloadDTO, @PathVariable long album_id, Authentication authentication){
+
+        try{
+
+            String email = authentication.getName();
+            Optional<Account> optionalAccount = accountService.findByEmail(email);
+            Account account = optionalAccount.get();
+
+            Optional<Album> optionalAlbum = albumService.findById(album_id);
+            Album album;
+
+            if (optionalAlbum.isPresent()) {
+                album = optionalAlbum.get();
+                if (account.getId() != album.getOwner().getId()) {
+                    return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+                }
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+            }
+
+            album.setName(albumPayloadDTO.getName());
+            album.setDescription(albumPayloadDTO.getDescription());
+            album = albumService.save(album);
+
+            List<PhotoDTO> photos = new ArrayList<>();
+
+            for(Photo photo: photoService.findByAlbumId(album_id)){
+                String link = link = "/albums/" + album.getId() + "/photos/" + photo.getId() + "/download-photo";
+                photos.add(new PhotoDTO(photo.getId(), photo.getName(), photo.getDescription(), photo.getFileName(), link));
+            }
+
+            AlbumViewDTO albumViewDTO = new AlbumViewDTO(album.getId(), album.getName(), album.getDescription(), photos);
+            return ResponseEntity.ok(albumViewDTO);
+
+
+
+        }catch (Exception e){
+            log.debug(AlbumError.ALBUM_UPDATE_ERROR.toString() + ": " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+
+
+
+    }
+
     @GetMapping(value = "/albums", produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
     @ApiResponse(responseCode = "200", description = "List of albums")
@@ -103,14 +155,51 @@ public class AlbumController {
         List<AlbumViewDTO> albums = new ArrayList<>();
         for (Album album : albumService.findByOwnerId(account.getId())) {
             List<PhotoDTO> photos = new ArrayList<>();
-            for(Photo photo: photoService.findByAlbumId(album.getId())){
-                String link = "/albums/" + album.getId() + "/photos/" + photo.getId() +  "/download-photo";
+            for (Photo photo : photoService.findByAlbumId(album.getId())) {
+                String link = "/albums/" + album.getId() + "/photos/" + photo.getId() + "/download-photo";
                 photos.add(new PhotoDTO(photo.getId(), photo.getName(), photo.getDescription(), photo.getFileName(), link));
             }
             albums.add(new AlbumViewDTO(album.getId(), album.getName(), album.getDescription(), photos));
         }
         return albums;
     }
+
+    @GetMapping(value = "/albums/{album_id}", produces = "application/json")
+    @ApiResponse(responseCode = "200", description = "List of albums by album id")
+    @ApiResponse(responseCode = "401", description = "Token missing")
+    @ApiResponse(responseCode = "403", description = "Token error")
+    @Operation(summary = "List album by album id")
+    @SecurityRequirement(name = "mrd-api")
+    public ResponseEntity<AlbumViewDTO> albumsByAlbumId(@PathVariable long album_id, Authentication authentication) {
+
+        String email = authentication.getName();
+        Optional<Account> optionalAccount = accountService.findByEmail(email);
+        Account account = optionalAccount.get();
+
+        Optional<Album> optionalAlbum = albumService.findById(album_id);
+        Album album;
+
+        if (optionalAlbum.isPresent()) {
+            album = optionalAlbum.get();
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+
+        if (account.getId() != album.getOwner().getId()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+        }
+
+        List<PhotoDTO> photos = new ArrayList<>();
+        for (Photo photo : photoService.findByAlbumId(album_id)) {
+            String link = "/albums/" + album.getId() + "/photos/" + photo.getId() + "/download-photo";
+            photos.add(new PhotoDTO(photo.getId(), photo.getName(), album.getDescription(), photo.getFileName(), link));
+        }
+
+        AlbumViewDTO albumViewDTO = new AlbumViewDTO(album.getId(), album.getName(), album.getDescription(), photos);
+        return ResponseEntity.ok(albumViewDTO);
+
+    }
+
 
     @PostMapping(value = "/{album_id}/upload-photos", consumes = {"multipart/form-data"})
     @Operation(summary = "Upload photos in album")
