@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -22,5 +24,8 @@ public class AlbumViewDTO {
     @NotBlank
     @Schema(description = "Album description", example = "England tour photos", requiredMode = Schema.RequiredMode.REQUIRED)
     private String description;
+
+    private List<PhotoDTO> photos;
+
 
 }

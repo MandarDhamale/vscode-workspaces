@@ -5,6 +5,7 @@ import com.mandar.SpringRestApi.repository.PhotoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -20,6 +21,10 @@ public class PhotoService {
 
     public Optional<Photo> findById(long id){
         return photoRepository.findById(id);
+    }
+
+    public List<Photo> findByAlbumId(long id){
+        return  photoRepository.findByAlbum_Id(id);
     }
 
 

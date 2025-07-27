@@ -5,6 +5,7 @@ import com.mandar.SpringRestApi.model.Album;
 import com.mandar.SpringRestApi.model.Photo;
 import com.mandar.SpringRestApi.payload.album.AlbumPayloadDTO;
 import com.mandar.SpringRestApi.payload.album.AlbumViewDTO;
+import com.mandar.SpringRestApi.payload.album.PhotoDTO;
 import com.mandar.SpringRestApi.service.AccountService;
 import com.mandar.SpringRestApi.service.AlbumService;
 import com.mandar.SpringRestApi.service.PhotoService;
@@ -76,7 +77,7 @@ public class AlbumController {
             album.setOwner(optionalAccount.get());
             album = albumService.save(album);
 
-            AlbumViewDTO albumViewDTO = new AlbumViewDTO(album.getId(), album.getName(), album.getDescription());
+            AlbumViewDTO albumViewDTO = new AlbumViewDTO(album.getId(), album.getName(), album.getDescription(), null);
             System.out.println(albumViewDTO.toString());
 
             return ResponseEntity.ok(albumViewDTO);
@@ -101,7 +102,12 @@ public class AlbumController {
         Account account = optionalAccount.get();
         List<AlbumViewDTO> albums = new ArrayList<>();
         for (Album album : albumService.findByOwnerId(account.getId())) {
-            albums.add(new AlbumViewDTO(album.getId(), album.getName(), album.getDescription()));
+            List<PhotoDTO> photos = new ArrayList<>();
+            for(Photo photo: photoService.findByAlbumId(album.getId())){
+                String link = "/albums/" + album.getId() + "/photos/" + photo.getId() +  "/download-photo";
+                photos.add(new PhotoDTO(photo.getId(), photo.getName(), photo.getDescription(), photo.getFileName(), link));
+            }
+            albums.add(new AlbumViewDTO(album.getId(), album.getName(), album.getDescription(), photos));
         }
         return albums;
     }
@@ -239,7 +245,6 @@ public class AlbumController {
                     .contentType(MediaType.parseMediaType(contentType))
                     .header(HttpHeaders.CONTENT_DISPOSITION, headerValue)
                     .body(resource);
-
 
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
