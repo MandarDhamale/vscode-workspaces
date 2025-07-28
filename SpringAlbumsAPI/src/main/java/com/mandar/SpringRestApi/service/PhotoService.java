@@ -27,5 +27,9 @@ public class PhotoService {
         return  photoRepository.findByAlbum_Id(id);
     }
 
+    public void delete(Photo photo){
+        photoRepository.delete(photo);
+    }
+
 
 }

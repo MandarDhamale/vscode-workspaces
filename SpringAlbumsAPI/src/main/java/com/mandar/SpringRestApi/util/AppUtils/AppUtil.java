@@ -16,13 +16,15 @@ import java.nio.file.Paths;
 
 public class AppUtil {
 
+    public static String ROOT_PATH = "src/main/resources/static/uploads/";
+
     public static String getPhotoUploadPath(String fileName, String folderName, long album_id) throws IOException {
-        String path = "src/main/resources/static/uploads/" + album_id + "/" + folderName;
+        String path = ROOT_PATH + album_id + "/" + folderName;
         Files.createDirectories(Paths.get(path));
         return new File(path).getAbsolutePath() + "/" + fileName;
     }
 
-    public static BufferedImage getThumbnail(MultipartFile orignalFile, Integer width) throws IOException{
+    public static BufferedImage getThumbnail(MultipartFile orignalFile, Integer width) throws IOException {
 
         BufferedImage thumbnailImg = null;
         BufferedImage img = ImageIO.read(orignalFile.getInputStream());
@@ -32,7 +34,7 @@ public class AppUtil {
     }
 
     public static Resource getFileAsResource(long album_id, String folder_name, String file_name) throws IOException {
-        String location = "src/main/resources/static/uploads/" + album_id + "/" + folder_name + "/" + file_name;
+        String location = ROOT_PATH + album_id + "/" + folder_name + "/" + file_name;
         Path filePath = Paths.get(location).toAbsolutePath().normalize();
 
         if (!Files.exists(filePath)) {
@@ -51,6 +53,19 @@ public class AppUtil {
         }
     }
 
+    public static boolean deletePhotoFromPath(String fileName, String folderName, long album_id) {
+        try {
+            File f = new File(ROOT_PATH + album_id + "/" + folderName + "/" + fileName);
+            if (f.delete()) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
 
 }

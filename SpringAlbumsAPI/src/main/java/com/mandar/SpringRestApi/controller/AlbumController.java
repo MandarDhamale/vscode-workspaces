@@ -8,7 +8,9 @@ import com.mandar.SpringRestApi.service.AccountService;
 import com.mandar.SpringRestApi.service.AlbumService;
 import com.mandar.SpringRestApi.service.PhotoService;
 import com.mandar.SpringRestApi.util.AppUtils.AppUtil;
+import com.mandar.SpringRestApi.util.constants.account.AccountSuccess;
 import com.mandar.SpringRestApi.util.constants.album.AlbumError;
+import com.mandar.SpringRestApi.util.constants.album.AlbumSuccess;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -23,6 +25,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -166,7 +169,7 @@ public class AlbumController {
             if (optionalPhoto.isPresent()) {
                 photo = optionalPhoto.get();
 
-                if(photo.getAlbum().getId() != album_id){
+                if (photo.getAlbum().getId() != album_id) {
                     return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
                 }
 
@@ -176,7 +179,7 @@ public class AlbumController {
 
                 PhotoViewDTO photoViewDTO = new PhotoViewDTO(photo.getId(), photo.getName(), photo.getDescription());
                 return ResponseEntity.ok(photoViewDTO);
-            }else {
+            } else {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
             }
 
@@ -185,6 +188,49 @@ public class AlbumController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
 
+    }
+
+    @DeleteMapping(value = "albums/{album_id}/photos/{photo_id}/delete")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    @ApiResponse(responseCode = "202", description = "Photo delete")
+    @Operation(summary = "Delete a photo")
+    @SecurityRequirement(name = "mrd-api")
+    public ResponseEntity<Map<String, String>> deletePhoto(@PathVariable long album_id, @PathVariable long photo_id, Authentication authentication) {
+
+        String email = authentication.getName();
+        Optional<Account> optionalAccount = accountService.findByEmail(email);
+        Account account = optionalAccount.get();
+
+        Optional<Album> optionalAlbum = albumService.findById(album_id);
+        Album album;
+
+        if (optionalAlbum.isPresent()) {
+            album = optionalAlbum.get();
+            if (account.getId() != album.getOwner().getId()) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+            }
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+
+        Optional<Photo> optionalPhoto = photoService.findById(photo_id);
+        if (optionalPhoto.isPresent()) {
+            Photo photo = optionalPhoto.get();
+            if (photo.getAlbum().getId() != album_id) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+            }
+
+            AppUtil.deletePhotoFromPath(photo.getFileName(), PHOTOS_FOLDER_NAME, album_id);
+            AppUtil.deletePhotoFromPath(photo.getFileName(), THUMBNAIL_FOLDER_NAME, album_id);
+            photoService.delete(photo);
+
+            Map<String, String> response = new HashMap<>();
+            response.put("message", AlbumSuccess.PHOTO_DELETED.toString());
+            return ResponseEntity.ok(response);
+
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
     }
 
     @GetMapping(value = "/albums", produces = "application/json")
@@ -253,7 +299,7 @@ public class AlbumController {
     @ApiResponse(responseCode = "400", description = "Please check the payload or token")
     @ApiResponse(responseCode = "401", description = "Invalid token error")
     @SecurityRequirement(name = "mrd-api")
-    public ResponseEntity<Map<String, List<String>>> addPhotos(@RequestPart(required = true) MultipartFile[] files, @PathVariable long album_id, Authentication authentication) {
+    public ResponseEntity<List<HashMap<String, List<?>>>> addPhotos(@RequestPart(required = true) MultipartFile[] files, @PathVariable long album_id, Authentication authentication) {
 
         String email = authentication.getName();
         Optional<Account> optionalAccount = accountService.findByEmail(email);
@@ -314,9 +360,15 @@ public class AlbumController {
         });
 
         if (!fileNamesWithSuccess.isEmpty() || !fileNamesWithError.isEmpty()) {
-            Map<String, List<String>> response = new HashMap<>();
-            response.put("successFiles", fileNamesWithSuccess);
-            response.put("failedFiles", fileNamesWithError);
+//            Map<String, List<String>> response = new HashMap<>();
+            HashMap<String, List<?>> result = new HashMap<>();
+            result.put("successFiles", fileNamesWithSuccess);
+            result.put("failedFiles", fileNamesWithError);
+
+            List<HashMap<String, List<?>>> response = new ArrayList<>();
+            response.add(result);
+
+
             return ResponseEntity.ok(response);
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
@@ -363,7 +415,7 @@ public class AlbumController {
         if (optionalPhoto.isPresent()) {
             Photo photo = optionalPhoto.get();
 
-            if(photo.getAlbum().getId() != album_id){
+            if (photo.getAlbum().getId() != album_id) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
             }
 
