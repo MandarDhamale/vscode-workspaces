@@ -33,6 +33,9 @@ public class AccountService implements UserDetailsService {
         return accountRepository.save(account);
     }
 
+    public Account updateAuthoritiesOnly(Account account) {
+        return accountRepository.save(account);
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

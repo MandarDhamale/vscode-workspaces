@@ -161,7 +161,7 @@ public class AuthController {
         if (optionalAccount.isPresent()) {
             Account account = optionalAccount.get();
             account.setAuthorities(authoritiesDTO.getAuthorities());
-            accountService.save(account);
+            accountService.updateAuthoritiesOnly(account);
             Map<String, String> response = new HashMap<>();
             response.put("message", AccountSuccess.AUTHORITIES_UPDATED.toString());
             return ResponseEntity.ok(response);
