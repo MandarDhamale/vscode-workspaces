@@ -3,9 +3,7 @@ package com.mandar.SpringRestApi.controller;
 import com.mandar.SpringRestApi.model.Account;
 import com.mandar.SpringRestApi.model.Album;
 import com.mandar.SpringRestApi.model.Photo;
-import com.mandar.SpringRestApi.payload.album.AlbumPayloadDTO;
-import com.mandar.SpringRestApi.payload.album.AlbumViewDTO;
-import com.mandar.SpringRestApi.payload.album.PhotoDTO;
+import com.mandar.SpringRestApi.payload.album.*;
 import com.mandar.SpringRestApi.service.AccountService;
 import com.mandar.SpringRestApi.service.AlbumService;
 import com.mandar.SpringRestApi.service.PhotoService;
@@ -19,7 +17,6 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.graphql.GraphQlProperties;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -95,9 +92,9 @@ public class AlbumController {
     @ApiResponse(responseCode = "204", description = "Album updated")
     @Operation(summary = "Update album")
     @SecurityRequirement(name = "mrd-api")
-    public ResponseEntity<AlbumViewDTO> updateAlbum(@Valid @RequestBody AlbumPayloadDTO albumPayloadDTO, @PathVariable long album_id, Authentication authentication){
+    public ResponseEntity<AlbumViewDTO> updateAlbum(@Valid @RequestBody AlbumPayloadDTO albumPayloadDTO, @PathVariable long album_id, Authentication authentication) {
 
-        try{
+        try {
 
             String email = authentication.getName();
             Optional<Account> optionalAccount = accountService.findByEmail(email);
@@ -121,7 +118,7 @@ public class AlbumController {
 
             List<PhotoDTO> photos = new ArrayList<>();
 
-            for(Photo photo: photoService.findByAlbumId(album_id)){
+            for (Photo photo : photoService.findByAlbumId(album_id)) {
                 String link = link = "/albums/" + album.getId() + "/photos/" + photo.getId() + "/download-photo";
                 photos.add(new PhotoDTO(photo.getId(), photo.getName(), photo.getDescription(), photo.getFileName(), link));
             }
@@ -130,13 +127,58 @@ public class AlbumController {
             return ResponseEntity.ok(albumViewDTO);
 
 
-
-        }catch (Exception e){
+        } catch (Exception e) {
             log.debug(AlbumError.ALBUM_UPDATE_ERROR.toString() + ": " + e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
 
+    }
 
+    @PutMapping(value = "/albums/{album_id}/photos/{photo_id}/update", consumes = "application/json", produces = "application/json")
+    @ResponseStatus(HttpStatus.CREATED)
+    @ApiResponse(responseCode = "400", description = "Please add a valid description")
+    @ApiResponse(responseCode = "204", description = "Photo updated")
+    @Operation(summary = "Update photo")
+    @SecurityRequirement(name = "mrd-api")
+    public ResponseEntity<PhotoViewDTO> updatePhoto(@Valid @RequestBody PhotoPayloadDTO photoPayloadDTO, @PathVariable long album_id, @PathVariable long photo_id, Authentication authentication) {
+
+        try {
+
+            String email = authentication.getName();
+            Optional<Account> optionalAccount = accountService.findByEmail(email);
+            Account account = optionalAccount.get();
+
+            Optional<Album> optionalAlbum = albumService.findById(album_id);
+            Album album;
+
+            if (optionalAlbum.isPresent()) {
+                album = optionalAlbum.get();
+                if (account.getId() != album.getOwner().getId()) {
+                    return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+                }
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+            }
+
+            Optional<Photo> optionalPhoto = photoService.findById(photo_id);
+            Photo photo;
+
+            if (optionalPhoto.isPresent()) {
+                photo = optionalPhoto.get();
+                photo.setName(photoPayloadDTO.getName());
+                photo.setDescription(photoPayloadDTO.getDescription());
+                photo = photoService.save(photo);
+
+                PhotoViewDTO photoViewDTO = new PhotoViewDTO(photo.getId(), photo.getName(), photo.getDescription());
+                return ResponseEntity.ok(photoViewDTO);
+            }else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+            }
+
+        } catch (Exception e) {
+            log.debug(AlbumError.PHOTO_UPDATE_ERROR.toString() + ": " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
 
     }
 
