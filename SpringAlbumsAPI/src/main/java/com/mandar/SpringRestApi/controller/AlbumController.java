@@ -394,6 +394,50 @@ public class AlbumController {
 
     }
 
+
+    @DeleteMapping(value = "albums/{album_id}/delete")
+    @ResponseStatus(HttpStatus.CREATED)
+    @ApiResponse(responseCode = "202", description = "Album deleted")
+    @Operation(summary = "Delete a photo")
+    @SecurityRequirement(name = "mrd-api")
+    public ResponseEntity<Map<String, String>> deleteAlbum(@PathVariable long album_id, Authentication authentication){
+
+        try{
+            String email = authentication.getName();
+            Optional<Account> optionalAccount = accountService.findByEmail(email);
+            Account account = optionalAccount.get();
+
+            Optional<Album> optionalAlbum = albumService.findById(album_id);
+            Album album;
+
+            if(optionalAlbum.isPresent()){
+                album = optionalAlbum.get();
+                if(account.getId() != album.getOwner().getId()){
+                    return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+                }
+            }else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+            }
+
+            for(Photo photo: photoService.findByAlbumId(album.getId())){
+                AppUtil.deletePhotoFromPath(photo.getFileName(), PHOTOS_FOLDER_NAME, album_id);
+                AppUtil.deletePhotoFromPath(photo.getFileName(), THUMBNAIL_FOLDER_NAME, album_id);
+                photoService.delete(photo);
+            }
+            albumService.delete(album);
+            Map<String, String> response = new HashMap<>();
+            response.put("message", AlbumSuccess.ALBUM_DELETED.toString());
+            return ResponseEntity.ok(response);
+
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+
+
+    }
+
+
+
     private ResponseEntity<?> downloadFile(long album_id, long photo_id, String folderName, Authentication authentication) {
 
         String email = authentication.getName();

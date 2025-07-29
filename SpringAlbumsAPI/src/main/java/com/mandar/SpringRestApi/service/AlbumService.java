@@ -1,6 +1,7 @@
 package com.mandar.SpringRestApi.service;
 
 import com.mandar.SpringRestApi.model.Album;
+import com.mandar.SpringRestApi.model.Photo;
 import com.mandar.SpringRestApi.repository.AlbumRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,5 +26,9 @@ public class AlbumService {
     public Optional<Album> findById(long id) {
         return albumRepository.findById(id);
     }
+    public void delete(Album album){
+        albumRepository.delete(album);
+    }
+
 
 }
