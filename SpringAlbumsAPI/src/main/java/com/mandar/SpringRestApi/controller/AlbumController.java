@@ -436,8 +436,6 @@ public class AlbumController {
 
     }
 
-
-
     private ResponseEntity<?> downloadFile(long album_id, long photo_id, String folderName, Authentication authentication) {
 
         String email = authentication.getName();
