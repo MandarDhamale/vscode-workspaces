@@ -26,6 +26,7 @@ import java.util.*;
 @RequestMapping("/api/v1/auth")
 @Tag(name = "Auth Controller", description = "Controller for account management")
 @Slf4j
+@CrossOrigin(origins = "http://localhost:3000/", maxAge = 3600)
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;

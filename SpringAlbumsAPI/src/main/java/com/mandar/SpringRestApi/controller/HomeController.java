@@ -14,7 +14,7 @@ import java.util.List;
 
 @RestController
 @Tag(name = "Home Controller", description = "Controller for home management")
-@CrossOrigin(origins = "http://localhost:3000", maxAge = 3600);
+@CrossOrigin(origins = "http://localhost:3000/", maxAge = 3600)
 public class HomeController {
 
     @Autowired
