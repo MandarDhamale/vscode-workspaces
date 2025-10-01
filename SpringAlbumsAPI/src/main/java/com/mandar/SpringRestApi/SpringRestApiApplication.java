@@ -11,7 +11,7 @@ import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 @SpringBootApplication
 @SecurityScheme(name = "mrd-api", scheme = "bearer", type = SecuritySchemeType.HTTP, in = SecuritySchemeIn.HEADER)
 @ConfigurationPropertiesScan
-public class SpringRestApiApplication {
+public class  SpringRestApiApplication {
 
 	//Tag: JWT & MySQL source setup for new projects
 	public static void main(String[] args) {

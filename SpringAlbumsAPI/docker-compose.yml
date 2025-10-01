@@ -1,0 +1,26 @@
+services:
+  springalbumsapi:
+    build: .
+    container_name: springalbumsapi
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/albums
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+    depends_on:
+      - mysqldb
+
+  mysqldb:
+    image: mysql:8
+    container_name: mysqldb
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: albums
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysqldb_data:/var/lib/mysql
+
+volumes:
+  mysqldb_data:
