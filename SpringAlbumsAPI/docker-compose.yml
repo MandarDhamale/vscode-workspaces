@@ -1,16 +1,6 @@
-services:
-  springalbumsapi:
-    build: .
-    container_name: springalbumsapi
-    ports:
-      - "8080:8080"
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/albums
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: root
-    depends_on:
-      - mysqldb
+version: '3.8'
 
+services:
   mysqldb:
     image: mysql:8
     container_name: mysqldb
@@ -21,6 +11,34 @@ services:
       - "3307:3306"
     volumes:
       - mysqldb_data:/var/lib/mysql
+    networks:
+      - spring_net
+    # Add this healthcheck section
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost", "-u", "root", "-p$$MYSQL_ROOT_PASSWORD"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  springalbumsapi:
+    build: .
+    container_name: springalbumsapi
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/albums
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+    # Modify the depends_on section to use the healthcheck
+    depends_on:
+      mysqldb:
+        condition: service_healthy
+    networks:
+      - spring_net
 
 volumes:
   mysqldb_data:
+
+networks:
+  spring_net:
