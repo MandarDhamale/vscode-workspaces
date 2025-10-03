@@ -44,6 +44,7 @@ import java.util.*;
 @RequestMapping("/api/v1/album")
 @Tag(name = "Album Controller", description = "Controller for album & photo management")
 @Slf4j
+//@CrossOrigin(origins = "http://localhost:5173", maxAge = 3600)
 public class AlbumController {
 
     static final String PHOTOS_FOLDER_NAME = "photos";

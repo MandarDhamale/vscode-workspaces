@@ -92,6 +92,8 @@ public class SecurityConfig {
         // TODO: remove these after upgrading the DB from H2 infile to SQL or any other DB
          http.csrf().disable();
          http.headers().frameOptions().disable();
+         http.cors();
+
         return http.build();
 
     }
