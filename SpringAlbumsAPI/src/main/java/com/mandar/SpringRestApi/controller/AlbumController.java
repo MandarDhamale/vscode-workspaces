@@ -51,7 +51,6 @@ public class AlbumController {
     static final String THUMBNAIL_FOLDER_NAME = "thumbnails";
     static final int THUMBNAIL_WIDTH = 300;
 
-
     @Autowired
     private AccountService accountService;
 

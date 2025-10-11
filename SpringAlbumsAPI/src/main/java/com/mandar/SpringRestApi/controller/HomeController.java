@@ -23,7 +23,7 @@ public class HomeController {
     @GetMapping("/")
     @Operation(summary = "Home page")
     public String home() {
-        return "Hello World!";
+        return "Hello World!!";
     }
 
 //    @PostMapping("/account")

@@ -36,6 +36,8 @@ services:
         condition: service_healthy
     networks:
       - spring_net
+    volumes:
+      - ./uploads:/app/src/main/resources/static/uploads
 
 volumes:
   mysqldb_data:
