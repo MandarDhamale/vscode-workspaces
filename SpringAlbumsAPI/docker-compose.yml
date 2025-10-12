@@ -37,10 +37,11 @@ services:
     networks:
       - spring_net
     volumes:
-      - ./uploads:/app/src/main/resources/static/uploads
+      - uploads_data:/app/src/main/resources/static/uploads
 
 volumes:
   mysqldb_data:
+  uploads_data:
 
 networks:
   spring_net:
