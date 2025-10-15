@@ -1,6 +1,11 @@
 package com.mandar.SpringRestApi.security;
 
+import com.mandar.SpringRestApi.config.RSAKeyProperties;
 import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jose.jwk.JWKSet;
+import com.nimbusds.jose.jwk.RSAKey;
+import com.nimbusds.jose.jwk.source.JWKSource;
+import com.nimbusds.jose.proc.SecurityContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,12 +23,6 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-
-import com.mandar.SpringRestApi.config.RSAKeyProperties;
-import com.nimbusds.jose.jwk.JWKSet;
-import com.nimbusds.jose.jwk.RSAKey;
-import com.nimbusds.jose.jwk.source.JWKSource;
-import com.nimbusds.jose.proc.SecurityContext;
 
 @Configuration
 @EnableWebSecurity
@@ -48,18 +47,9 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    // @Bean
-    // public InMemoryUserDetailsManager users() {
-    // return new InMemoryUserDetailsManager(
-    // User.withUsername("mrd")
-    // .password("{noop}mrd")
-    // .authorities("read")
-    // .build());
-    // }
-
     @Bean
     public AuthenticationManager authenticationManager(UserDetailsService userDetailsService,
-            PasswordEncoder passwordEncoder) {
+                                                       PasswordEncoder passwordEncoder) {
         var authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService);
         authProvider.setPasswordEncoder(passwordEncoder);
@@ -79,24 +69,50 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        http.cors();
-        http.authorizeHttpRequests(auth -> auth
-                .requestMatchers("/","/api/v1/auth/token", "/api/v1/auth/users/add", "/swagger-ui/**", "/v3/api-docs/**")
-                .permitAll()
-                        .requestMatchers("/api/v1/auth/users").hasAnyAuthority("SCOPE_ADMIN", "SCOPE_READ")
-                        .requestMatchers("/api/v1/auth/users/{user_id}/update-authorities").hasAuthority("SCOPE_ADMIN")
-                        .requestMatchers("/api/v1/album/add", "/api/v1/album/albums", "/api/v1/album/albums/{album_id}", "/api/v1/album/albums/{album_id}/update", "/api/v1/album/*/upload-photos", "/api/v1/album/albums/{album_id}/photos/{photo_id}/download-photo", "/api/v1/album/albums/{album_id}/photos/{photo_id}/download-thumbnail", "/api/v1/album/albums/{album_id}/photos/{photo_id}/update", "/api/v1/album/albums/{album_id}/photos/{photo_id}/delete", "/api/v1/album/albums/{album_id}/delete").authenticated()
-                        .requestMatchers("/api/v1/auth/profile", "/api/v1/auth/profile/update-password", "/api/v1/auth/profile/delete").authenticated())
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS) // stateless
-                                                                                                             // session
-                ).oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt); // Enable JWT
-        // TODO: remove these after upgrading the DB from H2 infile to SQL or any other DB
-         http.csrf().disable();
-         http.headers().frameOptions().disable();
+        http
+                .csrf(csrf -> csrf.disable())
+                .headers(headers -> headers.frameOptions(frame -> frame.disable()))
+                .cors(cors -> {})
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth -> auth
+                        // public endpoints
+                        .requestMatchers("/", "/api/v1/auth/token", "/api/v1/auth/users/add",
+                                "/swagger-ui/**", "/v3/api-docs/**").permitAll()
 
+                        // admin-level endpoints
+                        .requestMatchers("/api/v1/auth/users").hasAnyAuthority("SCOPE_ADMIN", "SCOPE_READ")
+                        .requestMatchers("/api/v1/auth/users/*/update-authorities").hasAuthority("SCOPE_ADMIN")
+
+                        // album management
+                        .requestMatchers(
+                                "/api/v1/album/add",
+                                "/api/v1/album/albums",
+                                "/api/v1/album/albums/*",
+                                "/api/v1/album/albums/*/update",
+                                "/api/v1/album/*/upload-photos",
+                                "/api/v1/album/albums/*/photos/*/update",
+                                "/api/v1/album/albums/*/photos/*/delete",
+                                "/api/v1/album/albums/*/delete"
+                        ).authenticated()
+
+                        //secure photo downloads properly using wildcards
+                        .requestMatchers(
+                                "/api/v1/album/albums/*/photos/*/download-photo",
+                                "/api/v1/album/albums/*/photos/*/download-thumbnail"
+                        ).authenticated()
+
+                        // profile endpoints
+                        .requestMatchers(
+                                "/api/v1/auth/profile",
+                                "/api/v1/auth/profile/update-password",
+                                "/api/v1/auth/profile/delete"
+                        ).authenticated()
+
+                        // fallback
+                        .anyRequest().denyAll()
+                )
+                .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
 
         return http.build();
-
     }
-
 }
